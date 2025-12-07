@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "486637061340",
+    "project_id": "icloth-95e92",
+    "storage_bucket": "icloth-95e92.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:486637061340:android:d6f1fd13be0b4f0e822019",
+        "android_client_info": {
+          "package_name": "com.martigonzalez.project_icloth"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBsuNqLIsasgdR9bSlIuAqoTjGHBjKaEFQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

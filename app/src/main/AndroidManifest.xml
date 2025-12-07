@@ -11,19 +11,27 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project_iCloth">
-        <activity
-            android:name=".MainActivity"
-            android:theme="@style/Theme.Project_iCloth"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ClosetActivity"
-            android:theme="@style/Theme.Project_iCloth"/>
+            android:theme="@style/Theme.Project_iCloth" />
+
+        <activity android:name=".SignUpActivity" />
+
+        <!-- LoginActivity usa activity_main.xml y es la pantalla inicial -->
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Project_iCloth">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- MainActivity, sin intent-filter de momento -->
+        <activity android:name=".MainActivity" />
+
     </application>
 
 </manifest>
