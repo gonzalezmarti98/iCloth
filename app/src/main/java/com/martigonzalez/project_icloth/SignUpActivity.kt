@@ -11,44 +11,43 @@ class SignUpActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
 
-    private lateinit var etEmail: EditText
-    private lateinit var etPassword: EditText
-    private lateinit var btnSignUpConfirm: Button
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sign_up)   // tu layout de registro
+        setContentView(R.layout.activity_sign_up)
 
         auth = FirebaseAuth.getInstance()
 
-        etEmail = findViewById(R.id.et_email_sign_up)
-        etPassword = findViewById(R.id.et_password_sign_up)
-        btnSignUpConfirm = findViewById(R.id.btn_sign_up_confirm)
+        val etEmail = findViewById<EditText>(R.id.et_email_sign_up)
+        val etPassword = findViewById<EditText>(R.id.et_password_sign_up)
+        val btnConfirm = findViewById<Button>(R.id.btn_sign_up_confirm)
 
-        btnSignUpConfirm.setOnClickListener { doSignUp() }
-    }
+        btnConfirm.setOnClickListener {
+            val email = etEmail.text.toString().trim()
+            val password = etPassword.text.toString().trim()
 
-    private fun doSignUp() {
-        val email = etEmail.text.toString().trim()
-        val password = etPassword.text.toString().trim()
-
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Email y contraseña obligatorios", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        auth.createUserWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    Toast.makeText(this, "Usuario creado correctamente", Toast.LENGTH_SHORT).show()
-                    finish()    // vuelve al login
-                } else {
-                    Toast.makeText(
-                        this,
-                        task.exception?.message ?: "Error al crear usuario",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            if (email.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Email y contraseña son obligatorios", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
+
+            if (password.length < 6) {
+                Toast.makeText(this, "La contraseña debe tener al menos 6 caracteres", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            auth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        Toast.makeText(this, "Usuario creado. Inicia sesión.", Toast.LENGTH_SHORT).show()
+                        finish()    // vuelve al MainActivity
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "Error al registrar: ${task.exception?.localizedMessage}",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+        }
     }
 }

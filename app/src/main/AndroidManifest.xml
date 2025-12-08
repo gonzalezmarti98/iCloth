@@ -12,25 +12,22 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Project_iCloth">
 
-        <activity
-            android:name=".ClosetActivity"
-            android:theme="@style/Theme.Project_iCloth" />
+        <activity android:name=".ClosetActivity" />
 
         <activity android:name=".SignUpActivity" />
 
-        <!-- LoginActivity usa activity_main.xml y es la pantalla inicial -->
+        <activity android:name=".LoginActivity" />
+
+        <!-- Ahora la actividad de inicio es MainActivity -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.Project_iCloth">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHHER" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <!-- MainActivity, sin intent-filter de momento -->
-        <activity android:name=".MainActivity" />
 
     </application>
 
