@@ -6,11 +6,13 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import com.google.firebase.auth.FirebaseAuth
+import com.martigonzalez.project_icloth.auth.AuthManager // <-- ¡IMPORTAMOS LA NUEVA CLASE!
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var auth: FirebaseAuth
+    // Ya no necesitamos la variable 'auth' de Firebase aquí.
+    private lateinit var authManager: AuthManager
+
     private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: Button
@@ -18,21 +20,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)   // tu layout de login
+        setContentView(R.layout.activity_main)
 
-        auth = FirebaseAuth.getInstance()
+        // 1. Inicializamos nuestro nuevo gestor de lógica
+        authManager = AuthManager()
 
         etEmail = findViewById(R.id.et_email)
         etPassword = findViewById(R.id.et_password)
         btnLogin = findViewById(R.id.btn_Login)
         btnSignUp = findViewById(R.id.btn_SingUp)
 
-        // Si ya hay sesión iniciada, entra directo
-        if (auth.currentUser != null) {
+        // 2. La comprobación inicial ahora usa el método de AuthManager
+        if (authManager.getCurrentUser() != null) {
             goToCloset()
         }
 
         btnLogin.setOnClickListener {
+            // 3. La función de login ahora es mucho más simple
             loginUser()
         }
 
@@ -41,29 +45,23 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    //LOGIN
     private fun loginUser() {
         val email = etEmail.text.toString().trim()
         val password = etPassword.text.toString().trim()
 
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Email y contraseña son obligatorios", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        auth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    goToCloset()
-                } else {
-                    Toast.makeText(
-                        this,
-                        "Error al iniciar sesión: ${task.exception?.localizedMessage}",
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+        // 4. Llamamos a nuestra clase externa y esperamos el resultado.
+        // La MainActivity ya no sabe NADA de Firebase.
+        authManager.loginUser(email, password) { success, errorMessage ->
+            if (success) {
+                goToCloset()
+            } else {
+                Toast.makeText(this, errorMessage, Toast.LENGTH_SHORT).show()
             }
+        }
     }
 
+    // Las funciones de navegación no cambian
     private fun goToSignUp() {
         startActivity(Intent(this, SignUpActivity::class.java))
     }

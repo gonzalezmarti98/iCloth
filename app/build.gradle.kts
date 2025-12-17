@@ -46,6 +46,9 @@ dependencies {
     //librerias de firebase
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-auth-ktx")
+    //añade las extensiones de Kotlin como by viewModels()).
+    //Simplifica el código para instancia Activities.
+    implementation("androidx.activity:activity-ktx:1.11.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

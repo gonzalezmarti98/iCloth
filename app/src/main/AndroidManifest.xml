@@ -16,8 +16,6 @@
 
         <activity android:name=".SignUpActivity" />
 
-        <activity android:name=".LoginActivity" />
-
         <!-- Ahora la actividad de inicio es MainActivity -->
         <activity
             android:name=".MainActivity"
