@@ -11,20 +11,17 @@
         android:src="@drawable/bottom_navigation_bar"
         android:scaleType="fitXY"/>
 
+    <!-- Archivo: res/layout/include_bottom_nav.xml -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/bottom_navigation_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        app:itemIconSize="30dp"
-        app:menu="@menu/items_nav_menu"
-        app:itemIconTint="@color/nav_item_color"
-        app:itemTextColor="@color/nav_item_color"
-        app:labelVisibilityMode="unlabeled"
-        app:itemBackground="@android:color/transparent"
-        app:itemRippleColor="@color/nav_press_color">
+        android:layout_gravity="bottom"
+        android:background="?android:attr/windowBackground"
+        app:menu="@menu/items_nav_menu" />
 
-    </com.google.android.material.bottomnavigation.BottomNavigationView>
 </FrameLayout>
     <!--
     app:labelVisibilityMode="unlabeled" >>>>> con esto SOLO se ven los iconos, y alineados

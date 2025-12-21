@@ -11,7 +11,7 @@
         android:title="Chat IA"/>
 
     <item
-        android:id="@+id/nav_add"
+        android:id="@+id/nav_add_cloth"
         android:icon="@drawable/ic_add_2"
         android:title="Add"/>
     <item

@@ -50,6 +50,20 @@ dependencies {
     //Simplifica el código para instancia Activities.
     implementation("androidx.activity:activity-ktx:1.11.0")
 
+    // La BOM (Bill of Materials) de Firebase se declara UNA SOLA VEZ.
+    // Gestiona las versiones de todas las librerías de Firebase para que sean compatibles.
+    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+
+    // Librerías de Firebase que necesitas
+    implementation("com.google.firebase:firebase-auth-ktx")
+    // Para subir imágenes
+    implementation("com.google.firebase:firebase-storage-ktx")
+
+    // Librería para usar 'by viewModels()' y otras extensiones de Kotlin para Activity
+    implementation("androidx.activity:activity-ktx:1.11.0")
+
+
+
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
