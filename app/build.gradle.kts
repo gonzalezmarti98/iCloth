@@ -49,6 +49,8 @@ dependencies {
     //añade las extensiones de Kotlin como by viewModels()).
     //Simplifica el código para instancia Activities.
     implementation("androidx.activity:activity-ktx:1.11.0")
+    //Glide: para cargar URLs en un ImageView
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
