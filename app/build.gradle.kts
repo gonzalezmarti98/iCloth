@@ -43,32 +43,28 @@ android {
 }
 
 dependencies {
-    //librerias de firebase
-    implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-    implementation("com.google.firebase:firebase-auth-ktx")
-    //añade las extensiones de Kotlin como by viewModels()).
-    //Simplifica el código para instancia Activities.
-    implementation("androidx.activity:activity-ktx:1.11.0")
-
-    // La BOM (Bill of Materials) de Firebase se declara UNA SOLA VEZ.
-    // Gestiona las versiones de todas las librerías de Firebase para que sean compatibles.
+    // --- LIBRERÍAS DE FIREBASE ---
+    // La BOM (Bill of Materials) gestiona que todas las versiones de Firebase sean compatibles.
+    // Se declara UNA SOLA VEZ.
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
 
-    // Librerías de Firebase que necesitas
-    implementation("com.google.firebase:firebase-auth-ktx")
-    // Para subir imágenes
-    implementation("com.google.firebase:firebase-storage-ktx")
+    // Librerías específicas de Firebase que necesitas:
+    implementation("com.google.firebase:firebase-auth-ktx")      // Para autenticación de usuarios
+    implementation("com.google.firebase:firebase-storage-ktx")    // Para guardar archivos (imágenes)
+    implementation("com.google.firebase:firebase-firestore-ktx")  // Para la base de datos NoSQL
 
-    // Librería para usar 'by viewModels()' y otras extensiones de Kotlin para Activity
+    // --- LIBRERÍAS DE ANDROIDX ---
+    // Extensiones de Kotlin para Activity (necesaria para algunas funcionalidades modernas)
     implementation("androidx.activity:activity-ktx:1.11.0")
 
-
-
+    // Dependencias estándar de AndroidX (generadas por el proyecto)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // --- LIBRERÍAS DE TEST ---
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

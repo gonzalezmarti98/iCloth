@@ -13,7 +13,9 @@ import com.martigonzalez.project_icloth.R
 import java.io.File
 
 class ClosetActivity : AppCompatActivity() {
-
+    // Variable para guardar la URI temporal de la cámara.
+    private var tempImageUri: Uri? = null
+    private lateinit var firestoreManager: FirestoreManager
     private lateinit var bottomNav: BottomNavigationView
     private lateinit var storageManager: StorageManager
 
@@ -44,14 +46,14 @@ class ClosetActivity : AppCompatActivity() {
         }
     }
 
-    // Variable para guardar la URI temporal de la cámara.
-    private var tempImageUri: Uri? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_closet)
 
+        //inicializamos los manager
         storageManager = StorageManager()
+        firestoreManager = FirestoreManager()
+
         bottomNav = findViewById(R.id.bottom_navigation_view)
 
         // Escuchamos el clic en la barra de navegación.
@@ -105,13 +107,17 @@ class ClosetActivity : AppCompatActivity() {
     // Llama al StorageManager para que haga el trabajo de subida.
     private fun uploadImage(uri: Uri) {
         Toast.makeText(this, "Subiendo prenda...", Toast.LENGTH_SHORT).show()
+
+        // La única responsabilidad de la app es subir la imagen.
+        // La Cloud Function se encargará de crear el documento en Firestore y analizarlo.
         storageManager.uploadClothImage(uri) { success, result ->
             if (success) {
-                Toast.makeText(this, "¡Prenda subida con éxito!", Toast.LENGTH_LONG).show()
-                // Aquí podrías guardar la URL 'result' en Firestore o hacer otra cosa.
+                Toast.makeText(this, "¡Prenda enviada para análisis!", Toast.LENGTH_LONG).show()
+                // No necesitamos hacer nada más aquí. La función en la nube se activa sola.
             } else {
-                Toast.makeText(this, "Error: $result", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error al subir la imagen: $result", Toast.LENGTH_LONG).show()
             }
         }
     }
+
 }
