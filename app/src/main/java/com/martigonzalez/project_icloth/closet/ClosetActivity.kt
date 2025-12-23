@@ -3,13 +3,19 @@ package com.martigonzalez.project_icloth.closet
 import android.Manifest
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
+import android.widget.EditText
+import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.martigonzalez.project_icloth.R
+import com.martigonzalez.project_icloth.closet.ColorOption
 import java.io.File
 
 class ClosetActivity : AppCompatActivity() {
@@ -29,8 +35,6 @@ class ClosetActivity : AppCompatActivity() {
     // LANZADOR PARA LA CÁMARA: Cuando el usuario toma una foto, la subimos.
     private val takePicture = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
-            // La URI se genera justo antes de abrir la cámara.
-            // Si la foto se tomó con éxito, la URI temporal ya apunta a la imagen.
             tempImageUri?.let {
                 uploadImage(it)
             }
@@ -50,74 +54,116 @@ class ClosetActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_closet)
 
-        //inicializamos los manager
         storageManager = StorageManager()
         firestoreManager = FirestoreManager()
-
         bottomNav = findViewById(R.id.bottom_navigation_view)
 
-        // Escuchamos el clic en la barra de navegación.
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
-                // ESTE ES EL COMPORTAMIENTO QUE QUIERES
                 R.id.nav_add_cloth -> {
                     showImageSourceDialog()
-                    true // Evento consumido
+                    true
                 }
-                // Aquí puedes añadir el comportamiento para otros botones si quieres
-                // R.id.nav_home -> { ... }
                 else -> false
             }
         }
     }
 
-    // Muestra el diálogo para elegir entre Cámara o Galería.
     private fun showImageSourceDialog() {
         val options = arrayOf("Tomar foto con la cámara", "Elegir de la galería")
         AlertDialog.Builder(this)
             .setTitle("Añadir nueva prenda")
             .setItems(options) { _, which ->
                 when (which) {
-                    0 -> requestCameraPermission.launch(Manifest.permission.CAMERA) // Opción Cámara
-                    1 -> selectImageFromGallery.launch("image/*") // Opción Galería
+                    0 -> requestCameraPermission.launch(Manifest.permission.CAMERA)
+                    1 -> selectImageFromGallery.launch("image/*")
                 }
             }
-            .setNegativeButton("Cancelar", null) // Botón para cancelar
+            .setNegativeButton("Cancelar", null)
             .show()
     }
 
-    // Abre la cámara del dispositivo.
     private fun openCamera() {
-        val imageUri = createImageUri()     // 1. Creamos la Uri en una variable local (no nula)
-        tempImageUri = imageUri              // 2. La guardamos en la variable de la clase para usarla después
-        takePicture.launch(imageUri)    // 3. Le pasamos la variable local (no nula) al lanzador
+        val imageUri = createImageUri()
+        tempImageUri = imageUri
+        takePicture.launch(imageUri)
     }
 
-
-    // Crea una URI temporal para la foto de la cámara.
     private fun createImageUri(): Uri {
         val image = File(filesDir, "camera_photo_temp.png")
         return FileProvider.getUriForFile(
             this,
-            "com.martigonzalez.project_icloth.fileprovider", // Debe coincidir con tu AndroidManifest.xml
+            "com.martigonzalez.project_icloth.fileprovider",
             image
         )
     }
 
-    // Llama al StorageManager para que haga el trabajo de subida.
-    private fun uploadImage(uri: Uri) {
-        Toast.makeText(this, "Subiendo prenda...", Toast.LENGTH_SHORT).show()
-
-        // La única responsabilidad de la app es subir la imagen.
-        // La Cloud Function se encargará de crear el documento en Firestore y analizarlo.
-        storageManager.uploadClothImage(uri) { success, result ->
-            if (success) {
-                Toast.makeText(this, "¡Prenda enviada para análisis!", Toast.LENGTH_LONG).show()
-                // No necesitamos hacer nada más aquí. La función en la nube se activa sola.
+    private fun uploadImage(imageUri: Uri) {
+        Toast.makeText(this, "Subiendo imagen...", Toast.LENGTH_SHORT).show()
+        storageManager.uploadImage(imageUri) { imageUrl ->
+            if (imageUrl != null) {
+                showAddClothDialog(imageUrl)
             } else {
-                Toast.makeText(this, "Error al subir la imagen: $result", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error al subir la imagen.", Toast.LENGTH_LONG).show()
             }
         }
     }
 
+    private fun showAddClothDialog(imageUrl: String) {
+        // 1. Define tu lista de colores
+        val colorOptions = listOf(
+            ColorOption("Negro", "#000000"),
+            ColorOption("Blanco", "#FFFFFF"),
+            ColorOption("Gris", "#808080"),
+            ColorOption("Rojo", "#FF0000"),
+            ColorOption("Azul", "#0000FF"),
+            ColorOption("Verde", "#008000"),
+            ColorOption("Amarillo", "#FFFF00"),
+            ColorOption("Marrón", "#A52A2A"),
+            ColorOption("Beige", "#F5F5DC")
+        )
+
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_cloth, null)
+        val etClothName = dialogView.findViewById<EditText>(R.id.etClothName)
+        val spinnerCategory = dialogView.findViewById<Spinner>(R.id.spinnerCategory)
+        val rvColorPicker = dialogView.findViewById<RecyclerView>(R.id.rvColorPicker)
+        val spinnerOccasion = dialogView.findViewById<Spinner>(R.id.spinnerOccasion)
+
+        val colorAdapter = ColorPickerAdapter(this, colorOptions)
+        rvColorPicker.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
+        rvColorPicker.adapter = colorAdapter
+
+        AlertDialog.Builder(this)
+            .setView(dialogView)
+            .setTitle("Añadir Prenda")
+            .setPositiveButton("Guardar") { _, _ ->
+                val name = etClothName.text.toString().trim()
+                val category = spinnerCategory.selectedItem.toString()
+                val selectedColor = colorAdapter.getSelectedColor().name
+                val occasion = spinnerOccasion.selectedItem.toString()
+
+                if (name.isNotEmpty()) {
+                    val clothData = mapOf(
+                        "name" to name,
+                        "category" to category,
+                        "color" to selectedColor,
+                        "occasion" to occasion,
+                        "imageUrl" to imageUrl
+                    )
+
+                    firestoreManager.saveClothItem(clothData) { success ->
+                        if (success) {
+                            Toast.makeText(this, "Prenda guardada con éxito", Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, "Error al guardar la prenda", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "Por favor, añade un nombre a la prenda", Toast.LENGTH_SHORT).show()
+                }
+            }
+            .setNegativeButton("Cancelar", null)
+            .create()
+            .show()
+    }
 }
