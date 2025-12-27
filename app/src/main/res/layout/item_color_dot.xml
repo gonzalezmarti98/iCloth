@@ -5,16 +5,14 @@
     android:layout_height="wrap_content"
     android:padding="4dp">
 
-    <!-- 1. Círculo de fondo que actuará como BORDE -->
+    <!-- Círculo de fondo que actuará como BORDE -->
     <!-- Es 2dp más grande que el círculo de color y es negro -->
     <View
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:background="@drawable/shape_color_dot_unselected"
-        app:tint="#212121" /> <!-- Usamos tint para forzar el color negro -->
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:background="@drawable/shape_circle_black"/>
 
-    <!-- 2. Círculo de color principal -->
-    <!-- Es más pequeño (46dp) y se coloca en el centro -->
+    <!-- Círculo de color principal -->
     <View
         android:id="@+id/colorDot"
         android:layout_width="46dp"
@@ -22,7 +20,7 @@
         android:layout_gravity="center"
         android:background="@drawable/shape_color_dot_unselected" />
 
-    <!-- 3. El 'tick' de selección (se mantiene igual) -->
+    <!-- tick' de selección-->
     <ImageView
         android:id="@+id/ivSelectionTick"
         android:layout_width="24dp"
