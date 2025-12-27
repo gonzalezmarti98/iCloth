@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         btnLogin = findViewById(R.id.btn_Login)
         btnSignUp = findViewById(R.id.btn_SingUp)
 
-        // 2. La comprobación inicial ahora usa el método de AuthManager
+        // 2. La comprobación inicial ahora usa el metodo de AuthManager
         if (authManager.getCurrentUser() != null) {
             goToCloset()
         }

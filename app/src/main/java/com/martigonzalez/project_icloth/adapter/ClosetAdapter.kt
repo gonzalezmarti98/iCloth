@@ -29,7 +29,7 @@ class ClosetAdapter(
         // Carga de imagen con Glide
         Glide.with(holder.itemView.context)
             .load(prenda.imagenUrl) // La URL que viene en tu objeto Prenda
-            .placeholder(R.drawable.ic_launcher_background) // Imagen mientras carga (puedes crear un drawable gris)
+            .placeholder(R.drawable.dialog_background) // Imagen mientras carga (puedes crear un drawable gris)
             .error(android.R.drawable.ic_menu_close_clear_cancel) // Imagen si falla la carga o la URL es vacía
             .centerCrop() // Ajusta la imagen para llenar el ImageView sin deformarse
             .into(holder.ivPrenda)

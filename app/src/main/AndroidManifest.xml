@@ -1,32 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icono_icloth_v3"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/icono_icloth_v3"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project_iCloth">
 
-        <activity android:name=".ClosetActivity" />
-
-        <activity android:name=".SignUpActivity" />
-
-        <!-- Ahora la actividad de inicio es MainActivity -->
+        <!-- 1. SPLASH ACTIVITY arranca primero -->
+        <!-- Theme.AppCompat.NoActionBar para que no salga la barra morada arriba -->
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashScreenActivity"
             android:exported="true"
-            android:theme="@style/Theme.Project_iCloth">
+            android:theme="@style/Theme.App.SplashTransparente">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- 2. MAIN ACTIVITY (LOGIN): Ahora es una actividad secundaria -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <!-- RESTO DE ACTIVIDADES -->
+        <activity android:name=".ClosetActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".ChatIaActivity" />
+        <activity android:name=".UserProfileActivity" />
+        <activity android:name=".NewsActivity" />
 
     </application>
 

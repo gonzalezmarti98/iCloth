@@ -4,61 +4,160 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="16dp"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="8dp">
 
-    <ScrollView
+    app:cardBackgroundColor="@android:color/transparent"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="0dp">
+
+    <!-- Ponemos el background AQUÍ, en el LinearLayout principal -->
+    <!-- Esto asegura que el fondo siga al contenido -->
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="685dp"
+        android:orientation="vertical"
+        android:background="@drawable/dialog_background"
+        android:padding="45dp">
 
-        <LinearLayout
+        <!-- Usamos un ScrollView INTERNO para el contenido que puede crecer -->
+        <!-- Esto es importante: si la descripción es muy larga, scrollea DENTRO del dialogo,
+             pero el fondo se mantiene estático en el marco del layout -->
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_height="wrap_content">
 
-            <!-- Botón para cerrar (X) -->
-            <ImageView
-                android:id="@+id/btnCerrar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="end"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                android:contentDescription="Cerrar" />
-
-            <!-- Imagen grande -->
-            <ImageView
-                android:id="@+id/ivDetalleImagen"
-                android:layout_width="match_parent"
-                android:layout_height="250dp"
-                android:layout_marginBottom="16dp"
-                android:scaleType="centerCrop"
-                android:background="#EEE" />
-
-            <!-- Textos de detalle -->
-            <TextView
-                android:id="@+id/tvDetalleNombre"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Nombre Prenda"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="8dp"/>
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tvDetalleCategoria"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Categoría: " />
+                <!-- Imagen grande de la prenda -->
+                <ImageView
+                    android:id="@+id/ivDetalleImagen"
+                    android:layout_width="match_parent"
+                    android:layout_height="250dp"
+                    android:layout_marginBottom="25dp"
+                    android:background="#EEE"
+                    android:scaleType="centerCrop" />
 
-            <TextView
-                android:id="@+id/tvDetalleTemporada"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Temporada: " />
+                <!-- Título / nombre de la prenda -->
+                <!--
+                <TextView
+                    android:id="@+id/tvDetalleNombre"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Nombre Prenda"
+                    android:fontFamily="@font/inter_bold"
+                    android:textColor="@color/white"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="8dp"/>
+                    -->
 
-            <!-- Puedes añadir más TextViews para color, formalLvl, etc. -->
+                <TextView
+                    android:id="@+id/tvId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:text="Id" />
 
-        </LinearLayout>
-    </ScrollView>
+                <TextView
+                    android:id="@+id/tvDetalleCategoria"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:text="Categoría" />
+
+                <TextView
+                    android:id="@+id/tvColorPpal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:text="Color" />
+
+                <TextView
+                    android:id="@+id/tvColorSec"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:text="Color sec" />
+
+                <TextView
+                    android:id="@+id/tvEstampado"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:text="Estampado" />
+
+                <TextView
+                    android:id="@+id/tvAjuste"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:text="Ajuste" />
+
+                <TextView
+                    android:id="@+id/tvMarca"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:text="Marca" />
+
+                <TextView
+                    android:id="@+id/tvFormal"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:text="Formalidad 1-10" />
+
+                <TextView
+                    android:id="@+id/tvDeportivo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:text="Deportivo 1-10" />
+
+                <TextView
+                    android:id="@+id/tvTemporada"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:text="Temporada" />
+
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+
 </androidx.cardview.widget.CardView>
+<!--val id: String,
+    val nombre: String,
+    val imagenUrl:String,
+    val categoria: String, // camiseta, pantalones, zapato, etc
+    val colorPpal: String,
+    val colorSec: List<String>,
+    val estampado: String, //ninguno, rallas, topos, degradado
+    val marca: String,
+    val formalLvl: Int, // 0-10 o de 0-5, como veas
+    val deporteLvl: Int, // "         "
+    val temporada: String, // primavera, verano, otoño, invierno
+    val ajuste: String // 4 posibles: estrecho, regular, ancho, oversize -->

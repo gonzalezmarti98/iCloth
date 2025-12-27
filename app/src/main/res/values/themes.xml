@@ -8,4 +8,14 @@
     <style name="Theme.Project_iCloth" parent="Base.Theme.Project_iCloth">
         <item name="colorControlHighlight">@color/nav_press_color</item>
     </style>
+
+    <!-- Tema invisible para el arranque -->
+    <style name="Theme.App.SplashTransparente" parent="Theme.AppCompat.NoActionBar">        <!-- Esto hace que la ventana sea transparente mientras carga -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- Quitamos título y bordes por seguridad -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>

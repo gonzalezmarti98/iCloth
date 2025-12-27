@@ -5,6 +5,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -50,11 +51,40 @@ class ClosetActivity : AppCompatActivity() {
         rvCloset.adapter = closetAdapter
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+
+        // SELECTOR BOTONES BARRA DE NAVEGACIÓN
         bottomNav.setOnItemSelectedListener { item ->
-            when (item.itemId) {
-                // aquí manejarás los ítems del menú inferior
+            when (item.itemId) { // ESTAMOS AQUÍ
+                R.id.nav_closet -> {
+                    true
+                }
+                R.id.nav_chat_ia -> { // CHAT IA
+                    val intent = Intent(this, ChatIaActivity::class.java)
+                    startActivity(intent)
+                    overridePendingTransition(0, 0)
+                    finish()
+                    true
+                }
+                R.id.nav_add -> { // (+) AÑADIR
+                    //TODO --> Agregar que pida hacer foto o seleccionar de galería
+                    true
+                }
+                R.id.nav_news -> { // NEWS
+                    startActivity(Intent(this, NewsActivity::class.java))
+                    overridePendingTransition(0, 0)
+                    finish()
+                    true
+                }
+                R.id.nav_profile -> { // PERFIL USUARIO
+                    val intent = Intent(this, UserProfileActivity::class.java)
+                    startActivity(intent)
+                    overridePendingTransition(0, 0)
+                    finish()
+                    true
+                }
+                else -> false
             }
-            true
+
         }
     }
 
@@ -64,19 +94,39 @@ class ClosetActivity : AppCompatActivity() {
 
         // Esto hace que el fondo del dialog sea transparente para que se vean las esquinas redondeadas del CardView
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        // Quitar el oscurecimiento (dimming) del fondo al abrirse el dialog
+        dialog.window?.clearFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
 
 
         // Vinculamos las vistas del layout del diálogo
         val ivImagen = dialog.findViewById<ImageView>(R.id.ivDetalleImagen)
-        val tvNombre = dialog.findViewById<TextView>(R.id.tvDetalleNombre)
+        //val tvNombre = dialog.findViewById<TextView>(R.id.tvDetalleNombre)
+        val tvId = dialog.findViewById<TextView>(R.id.tvId)
         val tvCategoria = dialog.findViewById<TextView>(R.id.tvDetalleCategoria)
-        val tvTemporada = dialog.findViewById<TextView>(R.id.tvDetalleTemporada)
-        val btnCerrar = dialog.findViewById<ImageView>(R.id.btnCerrar)
+        val tvColorPpal = dialog.findViewById<TextView>(R.id.tvColorPpal)
+        val tvColorSec = dialog.findViewById<TextView>(R.id.tvColorSec)
+        val tvEstampado = dialog.findViewById<TextView>(R.id.tvEstampado)
+        val tvAjuste = dialog.findViewById<TextView>(R.id.tvAjuste)
+        val tvMarca = dialog.findViewById<TextView>(R.id.tvMarca)
+        val tvFormal = dialog.findViewById<TextView>(R.id.tvFormal)
+        val tvDeportivo = dialog.findViewById<TextView>(R.id.tvDeportivo)
+        val tvTemporada = dialog.findViewById<TextView>(R.id.tvTemporada)
+        //val btnCerrar = dialog.findViewById<ImageView>(R.id.btnCerrar)
 
         // Asignamos los datos
-        tvNombre.text = prenda.nombre
+        //tvNombre.text = prenda.nombre
+        tvId.text = "Id: ${prenda.id}"
         tvCategoria.text = "Categoría: ${prenda.categoria}"
+        tvColorPpal.text = "Color principal: ${prenda.colorPpal}"
+        tvColorSec.text = "Color secundario: ${prenda.colorSec}"
+        tvEstampado.text = "Estampado: ${prenda.estampado}"
+        tvAjuste.text = "Ajuste: ${prenda.ajuste}"
+        tvMarca.text = "Marca: ${prenda.marca}"
+        tvFormal.text = "Formalidad: ${prenda.formalLvl}"
+        tvDeportivo.text = "Deportivo: ${prenda.deporteLvl}"
         tvTemporada.text = "Temporada: ${prenda.temporada}"
+
+
 
         // Cargamos la imagen con Glide
         Glide.with(this)
@@ -84,20 +134,17 @@ class ClosetActivity : AppCompatActivity() {
             .centerCrop()
             .into(ivImagen)
 
-        // Botón para cerrar
-        btnCerrar.setOnClickListener {
-            dialog.dismiss()
-        }
+
+        dialog.setCanceledOnTouchOutside(true) //si pulsas fuera del Dialog, se cierra
+        dialog.setCancelable(true) //dándole a "atrás" por defecto, se cierra
 
         dialog.show()
 
         //COnfiguración tamaño DIALOG
         val window = dialog.window
-        // Configuramos el ancho al 95% de la pantalla (MATCH_PARENT suele ser muy ancho, mejor un poco menos)
-        // O si prefieres todo el ancho, usa ViewGroup.LayoutParams.MATCH_PARENT
         window?.setLayout(
-            (resources.displayMetrics.widthPixels * 0.90).toInt(), // Ancho: 90% de la pantalla
-            android.view.ViewGroup.LayoutParams.WRAP_CONTENT       // Alto: Se ajusta al contenido
+            (resources.displayMetrics.widthPixels).toInt(), // Ancho de la pantalla
+            android.view.ViewGroup.LayoutParams.WRAP_CONTENT // Alto: Se ajusta al contenido
         )
     }
 
@@ -112,7 +159,9 @@ class ClosetActivity : AppCompatActivity() {
                     categoria = "Camiseta",
                     colorPpal = "Blanco",
                     colorSec = listOf(),
-                    formalLvl = 0,
+                    estampado = "Ninguno",
+                    marca = "Desconocida",
+                    formalLvl = 7,
                     deporteLvl = 0,
                     temporada = "Verano",
                     ajuste = "Regular"

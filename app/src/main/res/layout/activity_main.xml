@@ -13,7 +13,7 @@
         android:id="@+id/tv_login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="225dp"
+        android:layout_marginTop="260dp"
         android:fontFamily="@font/inter_light"
         android:text="Login"
         android:textColor="@color/white"
