@@ -22,7 +22,7 @@
             android:id="@+id/etClothName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Nombre (ej: Camiseta básica)"
+            android:hint="Nombre (ej: Camiseta de algodón)"
             android:inputType="textCapWords"
             android:layout_marginBottom="16dp"/>
 

@@ -15,8 +15,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.martigonzalez.project_icloth.R
-import com.martigonzalez.project_icloth.closet.ColorOption
 import java.io.File
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 
 class ClosetActivity : AppCompatActivity() {
     // Variable para guardar la URI temporal de la cámara.
@@ -110,17 +111,38 @@ class ClosetActivity : AppCompatActivity() {
     }
 
     private fun showAddClothDialog(imageUrl: String) {
-        // 1. Define tu lista de colores
         val colorOptions = listOf(
-            ColorOption("Negro", "#000000"),
+            // ... tu lista de colores completa va aquí ...
+            ColorOption("Negro", "#212121"),
             ColorOption("Blanco", "#FFFFFF"),
-            ColorOption("Gris", "#808080"),
-            ColorOption("Rojo", "#FF0000"),
-            ColorOption("Azul", "#0000FF"),
-            ColorOption("Verde", "#008000"),
-            ColorOption("Amarillo", "#FFFF00"),
-            ColorOption("Marrón", "#A52A2A"),
-            ColorOption("Beige", "#F5F5DC")
+            ColorOption("Gris Oscuro", "#5f6368"),
+            ColorOption("Gris Claro", "#bdc1c6"),
+            ColorOption("Beige", "#d2b48c"),
+            ColorOption("Marfil", "#fffff0"),
+            ColorOption("Crema", "#f5f5dc"),
+            ColorOption("Marrón", "#795548"),
+            ColorOption("Caqui", "#c3b091"),
+            ColorOption("Terracota", "#e2725b"),
+            ColorOption("Oliva", "#808000"),
+            ColorOption("Azul Marino", "#000080"),
+            ColorOption("Azul Rey", "#4169e1"),
+            ColorOption("Azul Cielo", "#87ceeb"),
+            ColorOption("Vaquero (Denim)", "#1560bd"),
+            ColorOption("Rojo", "#d32f2f"),
+            ColorOption("Burdeos", "#800020"),
+            ColorOption("Rosa Palo", "#f4c2c2"),
+            ColorOption("Fucsia", "#ff00ff"),
+            ColorOption("Verde Bosque", "#228b22"),
+            ColorOption("Verde Menta", "#98ff98"),
+            ColorOption("Verde Militar", "#556b2f"),
+            ColorOption("Amarillo", "#fdd835"),
+            ColorOption("Mostaza", "#ffdb58"),
+            ColorOption("Naranja", "#fb8c00"),
+            ColorOption("Morado", "#8e44ad"),
+            ColorOption("Lila", "#c8a2c8"),
+            ColorOption("Lavanda", "#e6e6fa"),
+            ColorOption("Dorado", "#ffd700"),
+            ColorOption("Plata", "#c0c0c0")
         )
 
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_cloth, null)
@@ -133,7 +155,7 @@ class ClosetActivity : AppCompatActivity() {
         rvColorPicker.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvColorPicker.adapter = colorAdapter
 
-        AlertDialog.Builder(this)
+        val dialog = AlertDialog.Builder(this) // <<< 2. Creamos el builder pero no lo mostramos aún
             .setView(dialogView)
             .setTitle("Añadir Prenda")
             .setPositiveButton("Guardar") { _, _ ->
@@ -148,7 +170,7 @@ class ClosetActivity : AppCompatActivity() {
                         "category" to category,
                         "color" to selectedColor,
                         "occasion" to occasion,
-                        "imageUrl" to imageUrl
+                        "imageUrl" to imageUrl,
                     )
 
                     firestoreManager.saveClothItem(clothData) { success ->
@@ -164,6 +186,17 @@ class ClosetActivity : AppCompatActivity() {
             }
             .setNegativeButton("Cancelar", null)
             .create()
-            .show()
+
+        // <<< 5. Solución DEFINITIVA para el teclado
+        dialog.setOnShowListener {
+            etClothName.requestFocus() // Pone el cursor en el campo del nombre
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.showSoftInput(etClothName, InputMethodManager.SHOW_IMPLICIT) // Muestra el teclado de forma suave
+        }
+        dialog.setOnDismissListener {
+            val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(etClothName.windowToken, 0) // Oculta el teclado al cerrar
+        }
+        dialog.show() // Finalmente, mostramos el diálogo
     }
 }
