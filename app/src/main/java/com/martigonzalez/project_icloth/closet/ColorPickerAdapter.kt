@@ -46,6 +46,7 @@ class ColorPickerAdapter(
         return ColorViewHolder(view)
     }
 
+
     // Vincula los datos con el ViewHolder en una posición específica.
     override fun onBindViewHolder(holder: ColorViewHolder, position: Int) {
         val colorOption = colors[position]
@@ -54,12 +55,19 @@ class ColorPickerAdapter(
 
         // Gestiona el clic en un item.
         holder.itemView.setOnClickListener {
-            if (selectedPosition == position) return@setOnClickListener
+            // Obtenemos la posición MÁS SEGURA usando el adapter.
+            val currentPosition = holder.bindingAdapterPosition
+            // Nos aseguramos de que la posición es válida antes de hacer nada.
+            if (currentPosition == RecyclerView.NO_POSITION) {
+                return@setOnClickListener
+            }
+
+            if (selectedPosition == currentPosition) return@setOnClickListener
 
             // Guarda la posición antigua para poder "desmarcarla".
             val oldSelectedPosition = selectedPosition
             // Actualiza la nueva posición seleccionada.
-            selectedPosition = position
+            selectedPosition = currentPosition
 
             // Notifica al RecyclerView que debe redibujar los dos items que han cambiado.
             notifyItemChanged(oldSelectedPosition)

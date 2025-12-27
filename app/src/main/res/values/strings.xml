@@ -3,4 +3,23 @@
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="text_sign_up">Sign up</string>
+    <!-- Opciones para la Categoría de la prenda -->
+    <string-array name="category_array">
+        <item>Parte Superior</item>
+        <item>Pantalones</item>
+        <item>Calzado</item>
+        <item>Prenda Exterior</item>
+        <item>Accesorio</item>
+        <item>Conjunto Completo</item> <!-- para vestidos, monos, etc. -->
+    </string-array>
+
+    <!-- Opciones para la Ocasión -->
+    <string-array name="occasion_array">
+        <item>Casual</item>
+        <item>Trabajo/Oficina</item>
+        <item>Deporte</item>
+        <item>Fiesta/Noche</item>
+        <item>Formal</item>
+        <item>Playa/Verano</item>
+    </string-array>
 </resources>
