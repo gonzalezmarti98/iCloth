@@ -110,6 +110,7 @@ class ClosetActivity : AppCompatActivity() {
         }
     }
 
+    // Dialog para subir prenda -> FIRESTORE + STORAGE
     private fun showAddClothDialog(imageUrl: String) {
         val colorOptions = listOf(
             // ... tu lista de colores completa va aquí ...
@@ -187,7 +188,6 @@ class ClosetActivity : AppCompatActivity() {
             .setNegativeButton("Cancelar", null)
             .create()
 
-        // <<< 5. Solución DEFINITIVA para el teclado
         dialog.setOnShowListener {
             etClothName.requestFocus() // Pone el cursor en el campo del nombre
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

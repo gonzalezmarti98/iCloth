@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<paths xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Permiso para el directorio de archivos (filesDir). Esencial para la cámara. -->
+    <files-path name="my_files" path="." />
+    <!-- Permiso para el directorio de caché. Es bueno tenerlo. -->
+    <cache-path name="cached_files" path="." />
+</paths>
+    
