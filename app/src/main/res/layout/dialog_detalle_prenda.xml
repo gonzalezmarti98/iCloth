@@ -15,7 +15,7 @@
         android:layout_width="match_parent"
         android:layout_height="685dp"
         android:orientation="vertical"
-        android:background="@drawable/dialog_background"
+        android:background="@drawable/dialog_background_v2"
         android:padding="45dp">
 
         <!-- Usamos un ScrollView INTERNO para el contenido que puede crecer -->
@@ -30,15 +30,21 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Imagen grande de la prenda -->
-                <ImageView
-                    android:id="@+id/ivDetalleImagen"
+                <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
+                    android:layout_height="249dp"
                     android:layout_marginBottom="25dp"
-                    android:background="#EEE"
-                    android:scaleType="centerCrop" />
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp">
 
+                    <ImageView
+                        android:id="@+id/ivDetalleImagen"
+                        android:layout_width="match_parent"
+                        android:layout_height="250dp"
+                        android:layout_marginBottom="25dp"
+                        android:background="#EEE"
+                        android:scaleType="centerCrop" />
+                </androidx.cardview.widget.CardView>
                 <!-- Título / nombre de la prenda -->
                 <!--
                 <TextView
