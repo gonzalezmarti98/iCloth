@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/ppal_background">
+
+    <!-- 1. TÍTULO SUPERIOR -->
+    <TextView
+        android:id="@+id/tvTitleChat"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="64dp"
+        android:fontFamily="@font/inter_bold"
+        android:text="Gemini"
+        android:textColor="@color/white"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- 2. LISTA DE MENSAJES (EL CHAT) -->
+    <!-- Aquí se irán "inflando" los mensajes y el cuadro de etiquetas -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvChatIa"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="8dp"
+        android:paddingHorizontal="16dp"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toTopOf="@+id/layoutInput"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvTitleChat"
+        tools:listitem="@layout/item_chat_user" />
+
+    <!-- 3. ZONA DE ESCRITURA (INPUT) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/layoutInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#20000000"
+        android:padding="10dp"
+        app:layout_constraintBottom_toTopOf="@+id/include_bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- 1. IMAGEN DE FONDO (El contenedor visual) -->
+        <!-- Esta imagen se queda quieta y bonita detrás -->
+        <ImageView
+            android:id="@+id/ivInputBackground"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/prompt_dialog"
+            android:scaleType="fitXY"
+            app:layout_constraintBottom_toBottomOf="@+id/etPrompt"
+            app:layout_constraintEnd_toStartOf="@+id/btnSend"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/etPrompt" />
+
+        <!-- 2. EL CAMPO DE TEXTO REAL (Transparente y encima) -->
+        <!-- background="@null" quita la línea o borde por defecto -->
+        <EditText
+            android:id="@+id/etPrompt"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:background="@null"
+            android:fontFamily="@font/inter_light"
+            android:hint="Escribe aquí tu prompt"
+            android:maxLines="3"
+            android:minHeight="48dp"
+            android:padding="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="#4BFFFFFF"
+            android:textSize="14sp"
+            android:gravity="center_vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/btnSend"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <!-- 3. BOTÓN ENVIAR -->
+        <ImageButton
+            android:id="@+id/btnSend"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:background="@drawable/png_dialog_background_v2"
+            android:backgroundTint="#59A8D4"
+            android:src="@android:drawable/ic_menu_send"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <!-- 4. BARRA DE NAVEGACIÓN -->
+    <include
+        android:id="@+id/include_bottom_nav"
+        layout="@layout/include_bottom_nav"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="31dp"
+        android:layout_height="37dp"
+        android:layout_marginStart="135dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintEnd_toStartOf="@+id/tvTitleChat"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/gemini_icon" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

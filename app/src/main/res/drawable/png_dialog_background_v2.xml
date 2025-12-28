@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Fondo blanco base (luego se tiñe con backgroundTint) -->
+    <solid android:color="#FFFFFF" />
+
+    <!-- Esquinas redondeadas (16dp es un valor estándar agradable) -->
+    <corners android:radius="16dp" />
+</shape>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp">
+
+    <!-- AVATAR IA -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardAvatar"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivAvatarAi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/icono_icloth_v3"
+            android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- CONTENEDOR GRIS TRANSLÚCIDO -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/png_dialog_background_v2"
+        android:backgroundTint="#33FFFFFF"
+        android:orientation="vertical"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/cardAvatar"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <!-- TEXTO INTRODUCTORIO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/inter_light"
+            android:text="Selecciona las etiquetas que mejor encajen:"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+        <!-- GRUPO DE ETIQUETAS (CHIPS) -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupTags"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:chipSpacing="4dp"
+            app:singleSelection="false">
+
+            <!-- EJEMPLO VISUAL (Se borrarán al cargar datos reales) -->
+            <com.google.android.material.chip.Chip
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ejemplo"
+                style="@style/Widget.MaterialComponents.Chip.Choice"/>
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <!-- BOTÓN CONFIRMAR -->
+        <Button
+            android:id="@+id/btnConfirmTags"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_gravity="end"
+            android:layout_marginTop="8dp"
+            android:backgroundTint="#59A8D4"
+            android:text="Confirmar"
+            android:textSize="12sp"
+            android:textColor="@color/white"/>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

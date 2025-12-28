@@ -56,6 +56,8 @@ dependencies {
     // --- LIBRERÍAS DE ANDROIDX ---
     // Extensiones de Kotlin para Activity (necesaria para algunas funcionalidades modernas)
     implementation("androidx.activity:activity-ktx:1.11.0")
+    //Glide: para cargar URLs en un ImageView
+    implementation("com.github.bumptech.glide:glide:4.16.0")
 
     // Dependencias estándar de AndroidX (generadas por el proyecto)
     implementation(libs.androidx.core.ktx)

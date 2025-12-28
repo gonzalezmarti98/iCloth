@@ -6,41 +6,57 @@
     <uses-feature android:name="android.hardware.camera" android:required="false" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/icono_icloth_v3"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/icono_icloth_v3"
         android:supportsRtl="true"
         android:theme="@style/Theme.Project_iCloth">
 
-        <activity android:name=".closet.ClosetActivity" />
-
-        <activity android:name=".SignUpActivity" />
-
-        <!-- Ahora la actividad de inicio es MainActivity -->
+        <!-- 1. SPLASH SCREEN (LAUNCHER) -->
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashScreenActivity"
             android:exported="true"
-            android:theme="@style/Theme.Project_iCloth">
+            android:theme="@style/Theme.App.SplashTransparente">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!-- Declaración del FileProvider -->
-        <provider
-            android:name="androidx.core.content.FileProvider"
-            android:authorities="com.martigonzalez.project_icloth.fileprovider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/fileprovider_paths" />
-        </provider>
-</application>
+
+        <!-- 2. MAIN ACTIVITY (LOGIN): Secundaria -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
+
+        <!-- 3. CLOSET (ambas versiones unificadas) -->
+        <activity android:name=".closet.ClosetActivity" />
+        <activity android:name=".ClosetActivity" />
+
+        <!-- 4. SIGN UP (común a ambas) -->
+        <activity android:name=".SignUpActivity" />
+
+        <!-- 5. NUEVAS del compañero -->
+        <activity android:name=".ChatIaActivity" />
+        <activity android:name=".UserProfileActivity" />
+        <activity android:name=".NewsActivity" />
+
+    </application>
+
+    <!-- 6. FILEPROVIDER (de tu versión HEAD) -->
+    <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="com.martigonzalez.project_icloth.fileprovider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/fileprovider_paths" />
+    </provider>
 
 </manifest>

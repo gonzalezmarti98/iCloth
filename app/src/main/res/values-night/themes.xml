@@ -4,4 +4,14 @@
         <!-- Customize your dark theme here. -->
         <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
     </style>
+
+    <!-- Tema invisible para el arranque -->
+    <style name="Theme.App.SplashTransparente" parent="Theme.AppCompat.NoActionBar">        <!-- Esto hace que la ventana sea transparente mientras carga -->
+        <item name="android:windowIsTranslucent">true</item>
+        <!-- Quitamos título y bordes por seguridad -->
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+
 </resources>

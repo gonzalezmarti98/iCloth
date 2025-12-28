@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp">
+
+    <!-- 1. AVATAR DE LA IA (Cambiado el micro por tu Logo) -->
+    <!-- Le he puesto un CardView circular para que tu logo cuadrado se vea redondo y elegante -->
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardAvatar"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/ivAvatarAi"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@mipmap/icono_icloth_v3"
+            android:scaleType="centerCrop" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- 2. GLOBO DE MENSAJE (Lo que dice la IA) -->
+    <!-- Es semitransparente para diferenciarlo de tus mensajes azules -->
+    <TextView
+        android:id="@+id/tvAiMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="40dp"
+        android:background="@drawable/png_dialog_background_v2"
+        android:backgroundTint="#33FFFFFF"
+        android:fontFamily="@font/inter_light"
+        android:padding="12dp"
+        android:text=""
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/cardAvatar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
