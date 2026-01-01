@@ -19,7 +19,7 @@ import java.io.File
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 
-class ClosetActivity : AppCompatActivity() {
+class AddClothActivity : AppCompatActivity() {
     // Variable para guardar la URI temporal de la cámara.
     private var tempImageUri: Uri? = null
     private lateinit var firestoreManager: FirestoreManager
@@ -113,7 +113,6 @@ class ClosetActivity : AppCompatActivity() {
     // Dialog para subir prenda -> FIRESTORE + STORAGE
     private fun showAddClothDialog(imageUrl: String) {
         val colorOptions = listOf(
-            // ... tu lista de colores completa va aquí ...
             ColorOption("Negro", "#212121"),
             ColorOption("Blanco", "#FFFFFF"),
             ColorOption("Gris Oscuro", "#5f6368"),

@@ -34,19 +34,18 @@
             android:name=".MainActivity"
             android:exported="false" />
 
-        <!-- 3. CLOSET (ambas versiones unificadas) -->
-        <activity android:name=".closet.ClosetActivity" />
+        <!-- 3. CLOSET -->
+        <activity android:name=".closet.AddClothActivity" />
         <activity android:name=".ClosetActivity" />
 
         <!-- 4. SIGN UP (común a ambas) -->
         <activity android:name=".SignUpActivity" />
 
-        <!-- 5. NUEVAS del compañero -->
+        <!-- 5. NUEVAS  -->
         <activity android:name=".ChatIaActivity" />
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".NewsActivity" />
 
-        <!-- 6. FILEPROVIDER (de tu versión HEAD) -->
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.martigonzalez.project_icloth.fileprovider"
@@ -56,5 +55,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/fileprovider_paths" />
         </provider>
+
     </application>
 </manifest>

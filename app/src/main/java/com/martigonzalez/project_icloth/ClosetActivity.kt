@@ -36,7 +36,7 @@ class ClosetActivity : AppCompatActivity() {
             return
         }
 
-        // ★ RECYCLERVIEW (nueva funcionalidad del compañero)
+        // ★ RECYCLERVIEW
         rvCloset = findViewById(R.id.rvCloset)
         rvCloset.layoutManager = GridLayoutManager(this, 2)
         cargarDatosDePrueba()
@@ -45,7 +45,7 @@ class ClosetActivity : AppCompatActivity() {
         }
         rvCloset.adapter = closetAdapter
 
-        // ★ BOTTOM NAVIGATION (funcional completa del compañero)
+        // ★ BOTTOM NAVIGATION
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
@@ -57,8 +57,11 @@ class ClosetActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_add_cloth -> {
-                    // TODO: Añadir foto/galería
-                    true
+                    // ¡AQUÍ ESTÁ LA MAGIA!
+                    // Creamos una intención para abrir la AddClothActivity.
+                    val intent = Intent(this, com.martigonzalez.project_icloth.closet.AddClothActivity::class.java)
+                    startActivity(intent) // Iniciamos la nueva actividad
+                    true // Indicamos que hemos manejado el evento
                 }
                 R.id.nav_news -> {
                     startActivity(Intent(this, NewsActivity::class.java))
@@ -77,7 +80,7 @@ class ClosetActivity : AppCompatActivity() {
         }
     }
 
-    // ★ DIALOGO DETALLE (nueva funcionalidad del compañero)
+    // ★ DIALOGO DETALLE
     private fun mostrarDialogoDetalle(prenda: Prenda) {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_detalle_prenda)
@@ -123,7 +126,7 @@ class ClosetActivity : AppCompatActivity() {
         )
     }
 
-    // ★ DATOS DE PRUEBA (nueva funcionalidad del compañero)
+    // ★ DATOS DE PRUEBA
     private fun cargarDatosDePrueba() {
         listaPrendas.clear()
         for (i in 1..10) {

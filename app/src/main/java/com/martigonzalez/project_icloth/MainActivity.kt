@@ -7,7 +7,7 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.martigonzalez.project_icloth.auth.AuthManager // <-- ¡IMPORTAMOS LA NUEVA CLASE!
-import com.martigonzalez.project_icloth.closet.ClosetActivity
+
 
 class MainActivity : AppCompatActivity() {
 
