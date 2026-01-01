@@ -46,17 +46,15 @@
         <activity android:name=".UserProfileActivity" />
         <activity android:name=".NewsActivity" />
 
+        <!-- 6. FILEPROVIDER (de tu versión HEAD) -->
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.martigonzalez.project_icloth.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider_paths" />
+        </provider>
     </application>
-
-    <!-- 6. FILEPROVIDER (de tu versión HEAD) -->
-    <provider
-        android:name="androidx.core.content.FileProvider"
-        android:authorities="com.martigonzalez.project_icloth.fileprovider"
-        android:exported="false"
-        android:grantUriPermissions="true">
-        <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/fileprovider_paths" />
-    </provider>
-
 </manifest>

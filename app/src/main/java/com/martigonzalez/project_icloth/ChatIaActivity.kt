@@ -45,7 +45,7 @@ class ChatIaActivity : AppCompatActivity() {
         // --- 2. CONFIGURACIÓN DE LA NAVEGACIÓN (Lo que ya tenías) ---
         // Nota: Asegúrate de que R.id.bottom_navigation es el ID dentro de tu include_bottom_nav.xml
         // Si te da error, prueba con R.id.include_bottom_nav
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation) ?: findViewById(R.id.include_bottom_nav)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation_view) ?: findViewById(R.id.include_bottom_nav)
 
         bottomNav.selectedItemId = R.id.nav_chat_ia
 
@@ -60,7 +60,7 @@ class ChatIaActivity : AppCompatActivity() {
                 R.id.nav_chat_ia -> { // ESTAMOS AQUÍ
                     true
                 }
-                R.id.nav_add -> { // (+) AÑADIR
+                R.id.nav_add_cloth -> { // (+) AÑADIR
                     //TODO --> Agregar que pida hacer foto o seleccionar de galería
                     true
                 }

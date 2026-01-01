@@ -46,7 +46,7 @@ class ClosetActivity : AppCompatActivity() {
         rvCloset.adapter = closetAdapter
 
         // ★ BOTTOM NAVIGATION (funcional completa del compañero)
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_closet -> true
@@ -56,7 +56,7 @@ class ClosetActivity : AppCompatActivity() {
                     finish()
                     true
                 }
-                R.id.nav_add -> {
+                R.id.nav_add_cloth -> {
                     // TODO: Añadir foto/galería
                     true
                 }

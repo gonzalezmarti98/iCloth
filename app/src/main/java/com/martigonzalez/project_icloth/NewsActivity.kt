@@ -10,7 +10,7 @@ class NewsActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_news)
 
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
 
         bottomNav.selectedItemId = R.id.nav_news
 
@@ -29,7 +29,7 @@ class NewsActivity: AppCompatActivity() {
                     finish()
                     true
                 }
-                R.id.nav_add -> { // (+) AÑADIR
+                R.id.nav_add_cloth -> { // (+) AÑADIR
                     //TODO --> Agregar que pida hacer foto o seleccionar de galería
                     true
                 }

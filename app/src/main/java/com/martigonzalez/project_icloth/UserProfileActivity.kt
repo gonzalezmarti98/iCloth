@@ -10,7 +10,7 @@ class UserProfileActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user_profile)
 
-        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
         // Marcamos visualmente el botón correcto
         bottomNav.selectedItemId = R.id.nav_profile
 
@@ -29,7 +29,7 @@ class UserProfileActivity: AppCompatActivity() {
                     finish()
                     true
                 }
-                R.id.nav_add -> { // (+) AÑADIR
+                R.id.nav_add_cloth -> { // (+) AÑADIR
                     //TODO --> Agregar que pida hacer foto o seleccionar de galería
                     true
                 }
