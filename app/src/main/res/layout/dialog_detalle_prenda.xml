@@ -82,6 +82,15 @@
                     android:textSize="16dp"
                     android:text="Color" />
 
+                <TextView
+                    android:id="@+id/tvUrl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/inter_semibold"
+                    android:textColor="@color/white"
+                    android:textSize="16dp"
+                    android:text="URL" />
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

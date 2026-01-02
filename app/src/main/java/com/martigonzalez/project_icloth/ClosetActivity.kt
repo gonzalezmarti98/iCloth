@@ -1,7 +1,6 @@
 package com.martigonzalez.project_icloth
 
-// --- IMPORTS COMPLETOS Y CORREGIDOS ---
-import com.martigonzalez.project_icloth.GlideApp
+// --- IMPORTS CORREGIDOS Y OPTIMIZADOS ---
 import android.Manifest
 import android.app.Dialog
 import android.content.Intent
@@ -21,9 +20,8 @@ import androidx.core.content.FileProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide // <-- CORRECCIÓN: Usamos el import de Glide estándar
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.firebase.Firebase
-import com.google.firebase.storage.storage
 import com.martigonzalez.project_icloth.auth.AuthManager
 import com.martigonzalez.project_icloth.closet.ColorOption
 import com.martigonzalez.project_icloth.closet.ColorPickerAdapter
@@ -32,50 +30,47 @@ import com.martigonzalez.project_icloth.closet.StorageManager
 import com.martigonzalez.project_icloth.model.Prenda
 import java.io.File
 
-
+/**
+ * Actividad principal del armario (Closet). Muestra la colección de prendas del usuario,
+ * y permite añadir nuevas prendas o navegar a otras secciones de la app.
+ */
 class ClosetActivity : AppCompatActivity() {
 
     // --- PROPIEDADES DE LA CLASE ---
-    // Vista que muestra la cuadrícula de prendas.
+
     private lateinit var rvCloset: RecyclerView
-    // Adaptador que conecta los datos (listaPrendas) con la vista (rvCloset).
     private lateinit var closetAdapter: ClosetAdapter
-    // Lista mutable que contiene los objetos de tipo Prenda que se mostrarán.
     private var listaPrendas = mutableListOf<Prenda>()
 
     // Gestores para interactuar con los servicios de Firebase.
-    private lateinit var storageManager: StorageManager // Gestiona la subida de imágenes a Firebase Storage.
-    private lateinit var firestoreManager: FirestoreManager // Gestiona las operaciones con la base de datos Firestore.
-    private lateinit var authManager: AuthManager // Gestiona la autenticación de usuarios.
+    private lateinit var storageManager: StorageManager
+    private lateinit var firestoreManager: FirestoreManager
+    private lateinit var authManager: AuthManager
 
-    // URI temporal para almacenar la imagen tomada con la cámara antes de subirla.
+    // URI temporal para almacenar la imagen tomada con la cámara.
     private var tempImageUri: Uri? = null
 
     // --- LANZADORES DE ACTIVIDADES (Activity Result Launchers) ---
-    // Se usan para manejar los resultados de otras actividades (cámara, galería, permisos).
+    // El método moderno en Android para manejar resultados de otras actividades y permisos.
 
-    // Lanzador para solicitar el permiso de la cámara.
     private val requestCameraPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
         if (isGranted) openCamera() else Toast.makeText(this, "Permiso de cámara denegado", Toast.LENGTH_SHORT).show()
     }
-    // Lanzador para seleccionar una imagen de la galería.
     private val selectImageFromGalleryLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        uri?.let { uploadImage(it) } // Si el usuario selecciona una imagen (uri no es nulo), la sube.
+        uri?.let { uploadImage(it) } // Si el usuario selecciona una imagen, la sube.
     }
-    // Lanzador para tomar una foto con la cámara.
     private val takePictureLauncher = registerForActivityResult(ActivityResultContracts.TakePicture()) { success ->
-        if (success) tempImageUri?.let { uploadImage(it) } // Si la foto se tomó con éxito, sube la imagen guardada en tempImageUri.
+        if (success) tempImageUri?.let { uploadImage(it) } // Si la foto se tomó con éxito, sube la imagen.
     }
 
     /**
-     * Función principal que se ejecuta al crear la actividad.
-     * Es el punto de entrada para la configuración de la pantalla.
+     * Punto de entrada principal de la actividad. Se ejecuta al crear la pantalla.
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_closet)
 
-        // Inicialización de los gestores y componentes de la UI.
+        // Inicialización de gestores y componentes de la UI.
         storageManager = StorageManager()
         firestoreManager = FirestoreManager()
         authManager = AuthManager()
@@ -86,36 +81,33 @@ class ClosetActivity : AppCompatActivity() {
     }
 
     /**
-     * Configura el RecyclerView, que es la cuadrícula donde se muestran las prendas.
+     * Configura el RecyclerView (la cuadrícula) que muestra las prendas.
      */
     private fun setupRecyclerView() {
         rvCloset = findViewById(R.id.rvCloset)
-        // Inicializa el adaptador con la lista de prendas y una acción a ejecutar al hacer clic en una.
+        // Inicializa el adaptador con una lista vacía y define la acción de clic.
         closetAdapter = ClosetAdapter(listaPrendas) { prenda ->
-            mostrarDialogoDetalle(prenda) // Al hacer clic, muestra el diálogo con los detalles.
+            mostrarDialogoDetalle(prenda) // Al hacer clic en una prenda, muestra sus detalles.
         }
         rvCloset.layoutManager = GridLayoutManager(this, 3) // Organiza los ítems en una cuadrícula de 3 columnas.
         rvCloset.adapter = closetAdapter
     }
 
     /**
-     * Configura la barra de navegación inferior (BottomNavigationView).
+     * Configura la barra de navegación inferior.
      */
     private fun setupBottomNavigation() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
         bottomNav.selectedItemId = R.id.nav_closet // Marca el ícono del armario como seleccionado.
 
-        // Define las acciones para cada ítem de la barra de navegación.
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
                 R.id.nav_add_cloth -> {
-                    showImageSourceDialog() // Muestra el diálogo para elegir entre cámara o galería.
-                    false // Devuelve false para que el ítem no se mantenga seleccionado.
+                    showImageSourceDialog()
+                    false // Devuelve false para que el ítem no se mantenga seleccionado (es una acción puntual).
                 }
                 R.id.nav_chat_ia -> {
                     startActivity(Intent(this, ChatIaActivity::class.java))
-                    overridePendingTransition(0, 0) // Sin animación de transición.
-                    finish() // Cierra la actividad actual para no apilarla.
                     true
                 }
                 R.id.nav_news -> {
@@ -133,18 +125,19 @@ class ClosetActivity : AppCompatActivity() {
     }
 
     /**
-     * Carga las prendas del usuario actual desde Firestore y actualiza la UI.
+     * Carga la lista de prendas del usuario actual desde Firestore y actualiza el adaptador.
      */
     private fun loadClothesFromFirestore() {
         firestoreManager.getAllClothes { prendas ->
-            listaPrendas.clear() // Limpia la lista actual para evitar duplicados.
-            listaPrendas.addAll(prendas) // Añade todas las prendas recuperadas.
-            closetAdapter.notifyDataSetChanged() // Notifica al adaptador que los datos han cambiado para que redibuje la lista.
+            // --- MEJORA: Usar la función de actualización del adaptador ---
+            // En lugar de modificar la lista directamente, pasamos los nuevos datos al adaptador.
+            // Esto es más limpio y sigue las mejores prácticas.
+            closetAdapter.updatePrendas(prendas)
         }
     }
 
     /**
-     * Muestra un diálogo para que el usuario elija entre tomar una foto o seleccionarla de la galería.
+     * Muestra un diálogo para que el usuario elija entre la cámara o la galería.
      */
     private fun showImageSourceDialog() {
         val options = arrayOf("Tomar foto", "Elegir de galería")
@@ -152,8 +145,8 @@ class ClosetActivity : AppCompatActivity() {
             .setTitle("Añadir prenda")
             .setItems(options) { _, which ->
                 when (which) {
-                    0 -> requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA) // Inicia el flujo de la cámara.
-                    1 -> selectImageFromGalleryLauncher.launch("image/*") // Inicia el flujo de la galería.
+                    0 -> requestCameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                    1 -> selectImageFromGalleryLauncher.launch("image/*")
                 }
             }
             .setNegativeButton("Cancelar", null)
@@ -161,8 +154,7 @@ class ClosetActivity : AppCompatActivity() {
     }
 
     /**
-     * Inicia la cámara para tomar una foto.
-     * Primero crea una URI temporal donde se guardará la imagen.
+     * Inicia el intent de la cámara para tomar una foto.
      */
     private fun openCamera() {
         tempImageUri = createImageUri()
@@ -170,23 +162,23 @@ class ClosetActivity : AppCompatActivity() {
     }
 
     /**
-     * Crea una URI de archivo local para guardar la foto de la cámara.
-     * Utiliza un FileProvider para garantizar la seguridad y compatibilidad.
+     * Crea una URI de archivo local segura para guardar temporalmente la foto de la cámara.
+     * @return La URI del archivo temporal creado.
      */
     private fun createImageUri(): Uri {
         val image = File(filesDir, "camera_photo.png")
+        // Usa un FileProvider para compartir la URI de forma segura.
         return FileProvider.getUriForFile(this, "$packageName.fileprovider", image)
     }
 
     /**
-     * Sube una imagen (dada su URI local) a Firebase Storage.
-     * Al completarse, muestra el diálogo para añadir los detalles de la prenda.
+     * Sube una imagen a Firebase Storage y, si tiene éxito, muestra el siguiente diálogo.
+     * @param uri La URI local de la imagen a subir (de la cámara o galería).
      */
     private fun uploadImage(uri: Uri) {
         Toast.makeText(this, "Subiendo imagen...", Toast.LENGTH_SHORT).show()
         storageManager.uploadImage(uri) { imageUrl ->
             if (imageUrl != null) {
-                // Si la subida es exitosa, muestra el siguiente diálogo con la URL de la imagen.
                 showAddClothDetailsDialog(imageUrl)
             } else {
                 Toast.makeText(this, "Error al subir imagen", Toast.LENGTH_LONG).show()
@@ -195,57 +187,64 @@ class ClosetActivity : AppCompatActivity() {
     }
 
     /**
-     * Muestra un diálogo con un formulario para añadir los detalles de la nueva prenda.
-     * @param imageUrl La URL de la imagen en Firebase Storage (formato gs://).
+     * Muestra el diálogo final con el formulario para añadir los detalles de la prenda.
+     * @param imageUrl La URL pública (https://) de la imagen ya subida a Firebase.
      */
     private fun showAddClothDetailsDialog(imageUrl: String) {
+        // Infla la vista personalizada para el diálogo.
         val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_cloth, null)
+
+        // Obtener referencias a todas las vistas dentro del diálogo.
         val etClothName = dialogView.findViewById<EditText>(R.id.etClothName)
         val spinnerCategory = dialogView.findViewById<Spinner>(R.id.spinnerCategory)
-        val spinnerOccasion = dialogView.findViewById<Spinner>(R.id.spinnerOccasion)
         val rvColorPicker = dialogView.findViewById<RecyclerView>(R.id.rvColorPicker)
+        val spinnerOccasion = dialogView.findViewById<Spinner>(R.id.spinnerOccasion)
 
-        // Define la lista de colores disponibles para seleccionar.
-        val colorList = listOf(
-            ColorOption("Blanco", "#FFFFFF"), ColorOption("Gris Claro", "#F2F2F2"),
-            ColorOption("Gris", "#808080"), ColorOption("Gris Oscuro", "#4A4A4A"),
-            ColorOption("Negro", "#000000"), ColorOption("Rojo", "#FF0000"),
-            ColorOption("Rosa", "#FFC0CB"), ColorOption("Fucsia", "#FF00FF"),
-            ColorOption("Vino", "#800000"), ColorOption("Naranja", "#FFA500"),
-            ColorOption("Amarillo", "#FFFF00"), ColorOption("Mostaza", "#FFDB58"),
-            ColorOption("Verde", "#00FF00"), ColorOption("Verde Menta", "#98FF98"),
-            ColorOption("Verde Oliva", "#808000"), ColorOption("Verde Bosque", "#228B22"),
-            ColorOption("Azul", "#0000FF"), ColorOption("Azul Cielo", "#87CEEB"),
-            ColorOption("Azul Marino", "#000080"), ColorOption("Turquesa", "#40E0D0"),
-            ColorOption("Lila", "#C8A2C8"), ColorOption("Morado", "#800080"),
-            ColorOption("Lavanda", "#E6E6FA"), ColorOption("Beige", "#F5F5DC"),
-            ColorOption("Marrón", "#964B00"), ColorOption("Caqui", "#F0E68C"),
-            ColorOption("Terracota", "#E2725B")
+        val colorOptions = listOf(
+            ColorOption("Negro", "#212121"), ColorOption("Blanco", "#FFFFFF"),
+            ColorOption("Gris Oscuro", "#5f6368"), ColorOption("Gris Claro", "#bdc1c6"),
+            ColorOption("Beige", "#d2b48c"), ColorOption("Marfil", "#fffff0"),
+            ColorOption("Crema", "#f5f5dc"), ColorOption("Marrón", "#795548"),
+            ColorOption("Caqui", "#c3b091"), ColorOption("Terracota", "#e2725b"),
+            ColorOption("Oliva", "#808000"), ColorOption("Azul Marino", "#000080"),
+            ColorOption("Azul Rey", "#4169e1"), ColorOption("Azul Cielo", "#87ceeb"),
+            ColorOption("Vaquero (Denim)", "#1560bd"), ColorOption("Rojo", "#d32f2f"),
+            ColorOption("Burdeos", "#800020"), ColorOption("Rosa Palo", "#f4c2c2"),
+            ColorOption("Fucsia", "#ff00ff"), ColorOption("Verde Bosque", "#228b22"),
+            ColorOption("Verde Menta", "#98ff98"), ColorOption("Verde Militar", "#556b2f"),
+            ColorOption("Amarillo", "#fdd835"), ColorOption("Mostaza", "#ffdb58"),
+            ColorOption("Naranja", "#fb8c00"), ColorOption("Morado", "#8e44ad"),
+            ColorOption("Lila", "#c8a2c8"), ColorOption("Lavanda", "#e6e6fa"),
+            ColorOption("Dorado", "#ffd700"), ColorOption("Plata", "#c0c0c0")
         )
-        // Configura el adaptador de colores.
-        val colorAdapter = ColorPickerAdapter(this, colorList)
+
+        val colorAdapter = ColorPickerAdapter(this,colorOptions)
         rvColorPicker.layoutManager = LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false)
         rvColorPicker.adapter = colorAdapter
 
         // Crea y muestra el diálogo de alerta.
         AlertDialog.Builder(this)
             .setView(dialogView)
+            .setTitle("Añadir Prenda")
             .setPositiveButton("Guardar") { _, _ ->
+                // Ahora sí, obtenemos los valores de las vistas justo al pulsar "Guardar".
                 val nombre = etClothName.text.toString().trim()
                 val categoria = spinnerCategory.selectedItem.toString()
+                val selectedColor = colorAdapter.getSelectedColor()?.name
                 val ocasion = spinnerOccasion.selectedItem.toString()
-                val colorSeleccionado = colorAdapter.getSelectedColor()
 
-                if (nombre.isNotEmpty()) {
-                    // Crea un nuevo objeto Prenda con los datos del formulario.
+                // Validamos que los campos obligatorios no estén vacíos.
+                if (nombre.isNotEmpty() && selectedColor != null) {
+                    // Creamos el objeto Prenda con todos los datos recogidos.
                     val nuevaPrenda = Prenda(
                         nombre = nombre,
-                        imagenUrl = imageUrl,
                         categoria = categoria,
+                        colorPpal = selectedColor,
                         ocasion = ocasion,
-                        colorPpal = colorSeleccionado.hexCode
+                        imagenUrl = imageUrl // La URL que recibimos como parámetro.
                     )
-                    // Guarda la nueva prenda en Firestore.
+
+                    // Guardamos la nueva prenda en Firestore.
                     firestoreManager.saveClothItem(nuevaPrenda) { success ->
                         if (success) {
                             Toast.makeText(this, "Prenda guardada", Toast.LENGTH_SHORT).show()
@@ -255,12 +254,14 @@ class ClosetActivity : AppCompatActivity() {
                         }
                     }
                 } else {
-                    Toast.makeText(this, "El nombre es obligatorio", Toast.LENGTH_SHORT).show()
+                    // Si falta el nombre o el color, avisamos al usuario.
+                    Toast.makeText(this, "El nombre y el color son obligatorios", Toast.LENGTH_SHORT).show()
                 }
             }
             .setNegativeButton("Cancelar", null)
             .create()
             .show()
+        // --- FIN DE LA CORRECCIÓN ---
     }
 
     /**
@@ -277,44 +278,36 @@ class ClosetActivity : AppCompatActivity() {
         val tvColor = dialog.findViewById<TextView>(R.id.tvColorPpal)
         val tvOcasion = dialog.findViewById<TextView>(R.id.tvDetalleOcasion)
 
+        /**
+        DEBUG
+        **/
+        val tvUrlDebug = dialog.findViewById<TextView>(R.id.tvUrl)
+        // Mostramos la URL que estamos a punto de usar en el TextView de depuración
+        tvUrlDebug?.text = "Debug URL: ${prenda.imagenUrl}"
+        /**
+        DEBUG
+         **/
+
         tvNombre?.text = prenda.nombre
         tvCategoria?.text = "Categoría: ${prenda.categoria}"
         tvColor?.text = "Color: ${prenda.colorPpal}"
         tvOcasion?.text = "Ocasión: ${prenda.ocasion}"
 
-        // Carga la imagen de la prenda desde Firebase Storage de forma segura
         if (ivImagen != null) {
-            if (prenda.imagenUrl.isNotEmpty()) {
-                try {
-                    // --- ¡MISMA CORRECCIÓN QUE EN EL ADAPTADOR! ---
-                    // 1. Convierte la URL 'gs://...' en una referencia de Storage
-                    val storageReference = Firebase.storage.getReferenceFromUrl(prenda.imagenUrl)
-
-                    // 2. Pasa la referencia directamente a GlideApp.
-                    GlideApp.with(this)
-                        .load(storageReference)
-                        .centerCrop()
-                        .placeholder(R.color.grey_placeholder)
-                        .error(R.drawable.ic_error_placeholder)
-                        .into(ivImagen)
-                } catch (e: Exception) {
-                    ivImagen.setImageResource(R.drawable.ic_error_placeholder)
-                    Log.e("DialogoDetalle", "Error al cargar la imagen con Glide", e)
-                }
+            // Se comprueba que la URL no esté vacía y que sea una URL web.
+            if (prenda.imagenUrl.isNotEmpty() && prenda.imagenUrl.startsWith("https")) {
+                // Usamos Glide estándar, que es más simple y robusto.
+                Glide.with(this)
+                    .load(prenda.imagenUrl) // Carga la URL https:// directamente.
+                    .centerCrop()
+                    .placeholder(R.color.grey_placeholder) // Imagen provisional mientras carga.
+                    .error(R.drawable.ic_error_placeholder) // Imagen si ocurre un error.
+                    .into(ivImagen)
             } else {
                 ivImagen.setImageResource(R.drawable.ic_error_placeholder)
+                Log.e("DialogoDetalle", "URL de imagen inválida o vacía: ${prenda.imagenUrl}")
             }
         }
         dialog.show()
-    }
-
-    /**
-     * Función de utilidad para navegar de vuelta a la actividad principal (MainActivity).
-     * Limpia la pila de actividades para que el usuario no pueda volver atrás.
-     */
-    private fun goToMainActivity() {
-        val intent = Intent(this, MainActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-        startActivity(intent)
     }
 }
