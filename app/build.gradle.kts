@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android)
     //plugin de google
     alias(libs.plugins.google.gms.google.services)
+    //necesario para ver las imagenes en el Recycler
+    id("org.jetbrains.kotlin.kapt")
 }
 
 android {
@@ -46,6 +48,7 @@ dependencies {
     // --- LIBRERÍAS DE FIREBASE ---
     // La BOM (Bill of Materials) gestiona que todas las versiones de Firebase sean compatibles.
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
+    implementation("com.firebaseui:firebase-ui-storage:8.0.0")
 
     // Librerías específicas de Firebase que necesitas:
     implementation("com.google.firebase:firebase-auth-ktx")      // Para autenticación de usuarios
@@ -63,6 +66,8 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     // Esta es la biblioteca que integra Glide con Firebase Storage
     implementation("com.firebaseui:firebase-ui-storage:8.0.2")
+    // Este es el procesador de anotaciones de Glide que genera la clase GlideApp
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
 
 
     // Dependencias estándar de AndroidX (generadas por el proyecto)

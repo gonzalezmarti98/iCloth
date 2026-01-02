@@ -1,41 +1,50 @@
 package com.martigonzalez.project_icloth.closet
 
 import android.net.Uri
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
-import java.util.UUID
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 
 class StorageManager {
 
-    // CORREGIDO: 'storage' ahora es la referencia raíz a tu bucket de almacenamiento.
-    private val storage = FirebaseStorage.getInstance().reference
-    private val userId = FirebaseAuth.getInstance().currentUser?.uid
-
     /**
-     * Sube una imagen al directorio del usuario actual y devuelve su URI de Firebase Storage (gs://).
+     * Sube una imagen a Firebase Storage dentro de una carpeta específica para el usuario actual.
+     * Al completarse, devuelve la URL de almacenamiento completa en formato 'gs://'.
+     *
+     * @param uri La URI local del archivo de imagen que se va a subir.
+     * @param onComplete Una función lambda que se ejecuta al terminar. Recibe la URL gs:// como String,
+     *                   o null si la subida falla.
      */
-    fun uploadImage(imageUri: Uri, onComplete: (String?) -> Unit) {
+    fun uploadImage(uri: Uri, onComplete: (String?) -> Unit) {
+        // 1. Obtener el ID del usuario actualmente autenticado.
+        val userId = Firebase.auth.currentUser?.uid
+
+        // Si no hay un usuario logueado, no se puede subir la imagen.
         if (userId == null) {
-            onComplete(null)
+            onComplete(null) // Notifica el fallo.
             return
         }
 
-        // Creamos una ruta única para cada imagen para evitar sobreescribir archivos
-        val fileName = "${UUID.randomUUID()}.jpg"
+        // 2. Crear una referencia en Firebase Storage.
+        // La ruta es: /users/{ID_DEL_USUARIO}/clothes/{MARCA_DE_TIEMPO}.jpg
+        // Esto organiza las imágenes de cada usuario en su propia carpeta privada.
+        val imageRef = Firebase.storage.reference.child("users/$userId/clothes/${System.currentTimeMillis()}.jpg")
 
-        // CORREGIDO: Se llama a .child() directamente sobre 'storage', que ya es una referencia.
-        val storageRef = storage.child("users/$userId/clothes/$fileName")
-
-        // Subimos el archivo
-        storageRef.putFile(imageUri)
+        // 3. Iniciar la subida del archivo.
+        imageRef.putFile(uri)
             .addOnSuccessListener {
-                // Obtenemos la referencia URI del archivo (gs://).
-                val gsUri = "gs://${storageRef.bucket}/${storageRef.path}"
-                onComplete(gsUri)
+                // 4. ¡ÉXITO! La imagen se ha subido correctamente.
+                // Ahora construimos la URL de almacenamiento (gs://) que necesita Glide.
+                val bucket = imageRef.bucket
+                val path = imageRef.path
+                val storageUrl = "gs://$bucket$path" // Formato: "gs://tu-proyecto.appspot.com/users/..."
+
+                // 5. Devolver la URL completa a través de la función de callback.
+                onComplete(storageUrl)
             }
-            .addOnFailureListener { exception ->
-                // Opcional: Imprime el error para poder depurar si algo falla
-                android.util.Log.e("StorageManager", "Error al subir imagen", exception)
+            .addOnFailureListener {
+                // 6. FALLO. La subida ha fallado.
+                // Devolvemos null para indicar el error.
                 onComplete(null)
             }
     }
