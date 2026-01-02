@@ -1,9 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    //plugin de google
     alias(libs.plugins.google.gms.google.services)
-    //necesario para ver las imagenes en el Recycler
     id("org.jetbrains.kotlin.kapt")
 }
 
@@ -17,67 +15,45 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    buildTypes {
-        release {
-            isMinifyEnabled = false
-            proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
-            )
-        }
-    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = "11"
     }
 
-    buildFeatures{
+    buildFeatures {
         viewBinding = true
     }
-
 }
 
 dependencies {
-    // --- LIBRERÍAS DE FIREBASE ---
-    // La BOM (Bill of Materials) gestiona que todas las versiones de Firebase sean compatibles.
+
+    // --- FIREBASE ---
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
-    implementation("com.firebaseui:firebase-ui-storage:8.0.0")
+    implementation("com.google.firebase:firebase-auth-ktx")
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation("com.google.firebase:firebase-firestore-ktx")
 
-    // Librerías específicas de Firebase que necesitas:
-    implementation("com.google.firebase:firebase-auth-ktx")      // Para autenticación de usuarios
-    implementation("com.google.firebase:firebase-storage-ktx")    // Para guardar archivos (imágenes)
-    implementation("com.google.firebase:firebase-firestore-ktx")  // Para la base de datos NoSQL
-
-    // --- LIBRERÍAS DE ANDROIDX ---
-    // Extensiones de Kotlin para Activity (necesaria para algunas funcionalidades modernas)
-    implementation("androidx.activity:activity-ktx:1.11.0")
-    //Glide: para cargar URLs en un ImageView
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-
-
-    // Dependencias de Glide
-    implementation("com.github.bumptech.glide:glide:4.16.0")
-    // Esta es la biblioteca que integra Glide con Firebase Storage
+    // Firebase UI + Glide integration
     implementation("com.firebaseui:firebase-ui-storage:8.0.2")
-    // Este es el procesador de anotaciones de Glide que genera la clase GlideApp
+
+    // --- GLIDE ---
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
 
-
-    // Dependencias estándar de AndroidX (generadas por el proyecto)
+    // --- ANDROIDX ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
 
-    // --- LIBRERÍAS DE TEST ---
+    // --- TEST ---
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
