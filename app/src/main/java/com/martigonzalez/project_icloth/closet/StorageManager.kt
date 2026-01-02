@@ -10,6 +10,11 @@ class StorageManager {
     private val storage = Firebase.storage
     private val auth = Firebase.auth
 
+    /**
+     * Sube un fichero a Firebase Storage y devuelve la URL de descarga pública (https://...).
+     * @param uri La URI local del fichero a subir.
+     * @param onComplete Lambda que se ejecuta al terminar, devolviendo la URL https:// o null si hay un error.
+     */
     fun uploadImage(uri: Uri, onComplete: (String?) -> Unit) {
         val user = auth.currentUser
         if (user == null) {
@@ -20,11 +25,9 @@ class StorageManager {
 
         fileRef.putFile(uri)
             .addOnSuccessListener {
-                // --- ¡ESTE ES EL CAMBIO CLAVE! ---
-                // Tras subir la imagen, obtenemos su URL de descarga (https://...)
+                // Una vez subida la imagen, pedimos la URL de descarga.
                 fileRef.downloadUrl.addOnSuccessListener { downloadUri ->
-                    // La subida y la obtención de la URL fueron exitosas.
-                    // downloadUri.toString() es la URL https:// que necesitamos.
+                    // Éxito: downloadUri.toString() contiene la URL "https://..."
                     onComplete(downloadUri.toString())
                 }.addOnFailureListener { exception ->
                     // La subida fue bien, pero falló al obtener la URL.
@@ -33,7 +36,7 @@ class StorageManager {
                 }
             }
             .addOnFailureListener { exception ->
-                // La subida del archivo falló.
+                // La subida del archivo falló desde el principio.
                 Log.e("StorageManager", "Error al subir la imagen", exception)
                 onComplete(null)
             }
