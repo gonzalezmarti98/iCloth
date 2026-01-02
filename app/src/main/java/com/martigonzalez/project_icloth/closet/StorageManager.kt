@@ -7,48 +7,36 @@ import java.util.UUID
 
 class StorageManager {
 
+    // CORREGIDO: 'storage' ahora es la referencia raíz a tu bucket de almacenamiento.
     private val storage = FirebaseStorage.getInstance().reference
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
     /**
-     * Sube una imagen a Firebase Storage y devuelve su URL de descarga.
-     *
-     * @param imageUri La URI de la imagen seleccionada por el usuario. * @param onResult Callback que se llama con el resultado.
-     *                 Devuelve la URL (String) si tiene éxito, o null si falla.
+     * Sube una imagen al directorio del usuario actual y devuelve su URI de Firebase Storage (gs://).
      */
-    fun uploadImage(imageUri: Uri, onResult: (String?) -> Unit) {
-        // Comprobamos que el usuario está logueado
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
+    fun uploadImage(imageUri: Uri, onComplete: (String?) -> Unit) {
         if (userId == null) {
-            println("Error: Usuario no autenticado, no se puede subir la imagen.")
-            onResult(null)
+            onComplete(null)
             return
         }
 
-        // Creamos un nombre de archivo único usando la hora actual
-        val fileName = "${System.currentTimeMillis()}.jpg"
-        // Definimos la ruta completa en Storage: clothes/{userId}/{fileName}
-        val imageRef = storage.child("clothes/$userId/$fileName")
+        // Creamos una ruta única para cada imagen para evitar sobreescribir archivos
+        val fileName = "${UUID.randomUUID()}.jpg"
 
-        imageRef.putFile(imageUri)
+        // CORREGIDO: Se llama a .child() directamente sobre 'storage', que ya es una referencia.
+        val storageRef = storage.child("users/$userId/clothes/$fileName")
+
+        // Subimos el archivo
+        storageRef.putFile(imageUri)
             .addOnSuccessListener {
-                // La imagen se ha subido. Ahora obtenemos su URL de descarga.
-                imageRef.downloadUrl
-                    .addOnSuccessListener { uri ->
-                        // ¡Éxito! Tenemos la URL.
-                        println("Imagen subida con éxito. URL: $uri")
-                        onResult(uri.toString()) // Devolvemos la URL como un String
-                    }
-                    .addOnFailureListener { e ->
-                        // Falló la obtención de la URL
-                        println("Error al obtener la URL de descarga: $e")
-                        onResult(null)
-                    }
+                // Obtenemos la referencia URI del archivo (gs://).
+                val gsUri = "gs://${storageRef.bucket}/${storageRef.path}"
+                onComplete(gsUri)
             }
-            .addOnFailureListener { e ->
-                // Falló la subida de la imagen
-                println("Error al subir la imagen: $e")
-                onResult(null)
+            .addOnFailureListener { exception ->
+                // Opcional: Imprime el error para poder depurar si algo falla
+                android.util.Log.e("StorageManager", "Error al subir imagen", exception)
+                onComplete(null)
             }
     }
 }

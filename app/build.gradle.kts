@@ -45,7 +45,6 @@ android {
 dependencies {
     // --- LIBRERÍAS DE FIREBASE ---
     // La BOM (Bill of Materials) gestiona que todas las versiones de Firebase sean compatibles.
-    // Se declara UNA SOLA VEZ.
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
 
     // Librerías específicas de Firebase que necesitas:
@@ -58,6 +57,13 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.11.0")
     //Glide: para cargar URLs en un ImageView
     implementation("com.github.bumptech.glide:glide:4.16.0")
+
+
+    // Dependencias de Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    // Esta es la biblioteca que integra Glide con Firebase Storage
+    implementation("com.firebaseui:firebase-ui-storage:8.0.2")
+
 
     // Dependencias estándar de AndroidX (generadas por el proyecto)
     implementation(libs.androidx.core.ktx)
