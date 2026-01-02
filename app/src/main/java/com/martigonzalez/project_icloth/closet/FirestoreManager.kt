@@ -1,43 +1,42 @@
 package com.martigonzalez.project_icloth.closet
 
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.SetOptions
+import com.martigonzalez.project_icloth.model.Prenda // <-- IMPORT CORRECTO
 
 class FirestoreManager {
-
-    private val db = Firebase.firestore
+    private val db = FirebaseFirestore.getInstance()
     private val userId = FirebaseAuth.getInstance().currentUser?.uid
 
-    /**
-     * Guarda la información de una nueva prenda en la colección "clothes".
-     *
-     * @param clothData Un mapa con todos los datos de la prenda.
-     * @param onResult Callback que se llama cuando la operación termina.
-     */
-    fun saveClothItem(clothData: Map<String, Any>, onResult: (Boolean) -> Unit) {
-        val userId = FirebaseAuth.getInstance().currentUser?.uid
+    // ▼▼▼ FUNCIÓN MODIFICADA PARA ACEPTAR UN OBJETO Prenda ▼▼▼
+    fun saveClothItem(prenda: Prenda, onComplete: (Boolean) -> Unit) {
         if (userId == null) {
-            println("Error: Usuario no autenticado.")
-            onResult(false)
+            onComplete(false)
+            return
+        }
+        db.collection("users").document(userId).collection("clothes")
+            .add(prenda) // Firestore guardará el objeto directamente
+            .addOnSuccessListener { onComplete(true) }
+            .addOnFailureListener { onComplete(false) }
+    }
+
+    // ▼▼▼ FUNCIÓN MODIFICADA PARA DEVOLVER UNA LISTA DE Prenda ▼▼▼
+    fun getAllClothes(onResult: (List<Prenda>) -> Unit) {
+        if (userId == null) {
+            onResult(emptyList())
             return
         }
 
-        // Añadimos el userId a los datos antes de guardar
-        val completeClothData = clothData.toMutableMap()
-        completeClothData["userId"] = userId
-        completeClothData["timestamp"] = System.currentTimeMillis()
-
-        db.collection("clothes")
-            .add(completeClothData) // Guardamos el mapa completo
-            .addOnSuccessListener {
-                println("Documento de prenda guardado con éxito con ID: ${it.id}")
-                onResult(true)
+        db.collection("users").document(userId).collection("clothes")
+            .get()
+            .addOnSuccessListener { documents ->
+                // Convierte cada documento en un objeto Prenda
+                val prendas = documents.toObjects(Prenda::class.java)
+                onResult(prendas)
             }
-            .addOnFailureListener { e ->
-                println("Error al guardar el documento de la prenda: $e")
-                onResult(false)
+            .addOnFailureListener {
+                onResult(emptyList())
             }
     }
-
 }

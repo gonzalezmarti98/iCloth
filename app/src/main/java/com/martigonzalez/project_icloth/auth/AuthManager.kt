@@ -64,5 +64,11 @@ class AuthManager {private val firebaseAuth = FirebaseAuth.getInstance()
                 }
             }
     }
+    /**
+     * Cierra la sesión del usuario actual.
+     */
+    fun signOut() {
+        firebaseAuth.signOut()
+    }
 
 }

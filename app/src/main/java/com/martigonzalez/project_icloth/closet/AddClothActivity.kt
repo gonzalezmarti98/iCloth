@@ -18,7 +18,7 @@ import com.martigonzalez.project_icloth.R
 import java.io.File
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
-
+import com.martigonzalez.project_icloth.model.Prenda
 class AddClothActivity : AppCompatActivity() {
     // Variable para guardar la URI temporal de la cámara.
     private var tempImageUri: Uri? = null
@@ -165,15 +165,15 @@ class AddClothActivity : AppCompatActivity() {
                 val occasion = spinnerOccasion.selectedItem.toString()
 
                 if (name.isNotEmpty()) {
-                    val clothData = mapOf(
-                        "name" to name,
-                        "category" to category,
-                        "color" to selectedColor,
-                        "occasion" to occasion,
-                        "imageUrl" to imageUrl,
+                    val nuevaPrenda = Prenda(
+                        nombre = name,
+                        categoria = category,
+                        colorPpal = selectedColor,
+                        ocasion = occasion,
+                        imagenUrl = imageUrl
                     )
 
-                    firestoreManager.saveClothItem(clothData) { success ->
+                    firestoreManager.saveClothItem(nuevaPrenda) { success ->
                         if (success) {
                             Toast.makeText(this, "Prenda guardada con éxito", Toast.LENGTH_SHORT).show()
                         } else {
