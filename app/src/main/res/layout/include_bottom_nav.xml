@@ -19,10 +19,11 @@
         android:layout_height="80dp"
         android:layout_gravity="bottom"
         android:background="@drawable/bottom_navigation_bar"
-
-        android:paddingBottom="8dp"
-        app:itemIconSize="24dp"
+        app:itemIconTint="@color/nav_press_color"
+        android:paddingBottom="0dp"
+        app:itemIconSize="30dp"
         app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/items_nav_menu" />
+        app:menu="@menu/items_nav_menu"
+        app:itemRippleColor="@android:color/transparent" />
 
 </FrameLayout>
