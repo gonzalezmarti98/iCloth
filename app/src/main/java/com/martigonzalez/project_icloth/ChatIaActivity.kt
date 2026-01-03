@@ -61,7 +61,6 @@ class ChatIaActivity : AppCompatActivity() {
                     true
                 }
                 R.id.nav_add_cloth -> { // (+) AÑADIR
-                    //TODO --> Agregar que pida hacer foto o seleccionar de galería
                     true
                 }
                 R.id.nav_news -> { // NEWS

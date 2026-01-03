@@ -139,7 +139,7 @@ class ClosetActivity : AppCompatActivity() {
     /**
      * Muestra un diálogo para que el usuario elija entre la cámara o la galería.
      */
-    private fun showImageSourceDialog() {
+    fun showImageSourceDialog() {
         val options = arrayOf("Tomar foto", "Elegir de galería")
         AlertDialog.Builder(this)
             .setTitle("Añadir prenda")
@@ -272,6 +272,9 @@ class ClosetActivity : AppCompatActivity() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_detalle_prenda)
 
+        // --- ESTA ES LA LÍNEA MÁGICA QUE QUITA EL FONDO BLANCO ---
+        dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
         val ivImagen = dialog.findViewById<ImageView>(R.id.ivDetalleImagen)
         val tvNombre = dialog.findViewById<TextView>(R.id.tvNombrePrenda)
         val tvCategoria = dialog.findViewById<TextView>(R.id.tvDetalleCategoria)
@@ -280,7 +283,7 @@ class ClosetActivity : AppCompatActivity() {
 
         /**
         DEBUG
-        **/
+         **/
         val tvUrlDebug = dialog.findViewById<TextView>(R.id.tvUrl)
         // Mostramos la URL que estamos a punto de usar en el TextView de depuración
         tvUrlDebug?.text = "Debug URL: ${prenda.imagenUrl}"
@@ -310,4 +313,5 @@ class ClosetActivity : AppCompatActivity() {
         }
         dialog.show()
     }
+
 }

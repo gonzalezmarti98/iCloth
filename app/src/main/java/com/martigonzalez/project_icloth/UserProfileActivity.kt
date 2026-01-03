@@ -30,7 +30,8 @@ class UserProfileActivity: AppCompatActivity() {
                     true
                 }
                 R.id.nav_add_cloth -> { // (+) AÑADIR
-                    //TODO --> Agregar que pida hacer foto o seleccionar de galería
+                    ClosetActivity().showImageSourceDialog()
+                    false // Devuelve false para que el ítem no se mantenga seleccionado (es una acción puntual).
                     true
                 }
                 R.id.nav_news -> { // NEWS
