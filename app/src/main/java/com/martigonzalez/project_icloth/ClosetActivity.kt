@@ -199,6 +199,13 @@ class ClosetActivity : AppCompatActivity() {
         val spinnerCategory = dialogView.findViewById<Spinner>(R.id.spinnerCategory)
         val rvColorPicker = dialogView.findViewById<RecyclerView>(R.id.rvColorPicker)
         val spinnerOccasion = dialogView.findViewById<Spinner>(R.id.spinnerOccasion)
+        val spinnerTemporada = dialogView.findViewById<Spinner>(R.id.spinnerTemporada)
+        val spinnerNivelFormalidad = dialogView.findViewById<Spinner>(R.id.spinnerNivelFormalidad)
+        val spinnerAjuste = dialogView.findViewById<Spinner>(R.id.spinnerAjuste)
+        val spinnerPatron = dialogView.findViewById<Spinner>(R.id.spinnerPatron)
+
+
+        // Configuramos el RecyclerView de colores.
 
         val colorOptions = listOf(
             ColorOption("Negro", "#212121"), ColorOption("Blanco", "#FFFFFF"),
@@ -232,6 +239,11 @@ class ClosetActivity : AppCompatActivity() {
                 val categoria = spinnerCategory.selectedItem.toString()
                 val selectedColor = colorAdapter.getSelectedColor()?.name
                 val ocasion = spinnerOccasion.selectedItem.toString()
+                val temporada = spinnerTemporada.selectedItem.toString()
+                val nivelFormalidad = spinnerNivelFormalidad.selectedItem.toString()
+                val ajuste = spinnerAjuste.selectedItem.toString()
+                val patron = spinnerPatron.selectedItem.toString()
+
 
                 // Validamos que los campos obligatorios no estén vacíos.
                 if (nombre.isNotEmpty() && selectedColor != null) {
@@ -241,7 +253,11 @@ class ClosetActivity : AppCompatActivity() {
                         categoria = categoria,
                         colorPpal = selectedColor,
                         ocasion = ocasion,
-                        imagenUrl = imageUrl // La URL que recibimos como parámetro.
+                        imagenUrl = imageUrl, // La URL que recibimos como parámetro.
+                        temporada = temporada,
+                        nivelFormalidad = nivelFormalidad,
+                        ajuste = ajuste,
+                        patron = patron
                     )
 
                     // Guardamos la nueva prenda en Firestore.
@@ -272,7 +288,7 @@ class ClosetActivity : AppCompatActivity() {
         val dialog = Dialog(this)
         dialog.setContentView(R.layout.dialog_detalle_prenda)
 
-        // --- ESTA ES LA LÍNEA MÁGICA QUE QUITA EL FONDO BLANCO ---
+        // Esto nos quita el fondo blanco que salía por defecto.
         dialog.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
         val ivImagen = dialog.findViewById<ImageView>(R.id.ivDetalleImagen)
@@ -280,6 +296,10 @@ class ClosetActivity : AppCompatActivity() {
         val tvCategoria = dialog.findViewById<TextView>(R.id.tvDetalleCategoria)
         val tvColor = dialog.findViewById<TextView>(R.id.tvColorPpal)
         val tvOcasion = dialog.findViewById<TextView>(R.id.tvDetalleOcasion)
+        val tvTemporada = dialog.findViewById<TextView>(R.id.tvTemporada)
+        val tvNivelFormalidad = dialog.findViewById<TextView>(R.id.tvNivelFormalidad)
+        val tvAjuste = dialog.findViewById<TextView>(R.id.tvAjuste)
+        val tvPatron = dialog.findViewById<TextView>(R.id.tvPatron)
 
         /**
         DEBUG
@@ -295,6 +315,11 @@ class ClosetActivity : AppCompatActivity() {
         tvCategoria?.text = "Categoría: ${prenda.categoria}"
         tvColor?.text = "Color: ${prenda.colorPpal}"
         tvOcasion?.text = "Ocasión: ${prenda.ocasion}"
+        tvTemporada?.text = "Temporada: ${prenda.temporada}"
+        tvNivelFormalidad?.text = "Nivel de Formalidad: ${prenda.nivelFormalidad}"
+        tvAjuste?.text = "Ajuste: ${prenda.ajuste}"
+        tvPatron?.text = "Patrón: ${prenda.patron}"
+
 
         if (ivImagen != null) {
             // Se comprueba que la URL no esté vacía y que sea una URL web.

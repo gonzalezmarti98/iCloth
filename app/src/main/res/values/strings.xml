@@ -22,4 +22,70 @@
         <item>Formal</item>
         <item>Playa/Verano</item>
     </string-array>
+
+    <!-- Opciones para Temporada -->
+    <string-array name="temporada_array">
+        <item>Entretiempo</item>
+        <item>Invierno</item>
+        <item>Primavera</item>
+        <item>Verano</item>
+        <item>Otoño</item>
+    </string-array>
+
+    <!-- Opciones para Formalidad -->
+    <string-array name="nivelFormalidad_array">
+        <item>Bajo</item>
+        <item>Medio</item>
+        <item>Alto</item>
+    </string-array>
+
+    <!-- Opciones para Ajuste -->
+    <string-array name="ajuste_array">
+        <item>Regular</item>
+        <item>Ceñido</item>
+        <item>Oversize</item>
+    </string-array>
+
+    <!-- Opciones para Patrón -->
+    <string-array name="patron_array">
+        <item>Ninguno</item>
+        <item>Dibujos</item>
+        <item>Rallas</item>
+        <item>Cuadros</item>
+        <item>Topos</item>
+    </string-array>
+
+    <!-- Opciones para la Ocasión V2 -->
+    <string-array name="category_array_v2">
+        <item>Bolso</item>
+        <item>Botas</item>
+        <item>Bragas</item>
+        <item>Bufanda</item>
+        <item>Calzoncillos</item>
+        <item>Camisa</item>
+        <item>Camiseta corta</item>
+        <item>Camiseta larga</item>
+        <item>Cinturón</item>
+        <item>Corbata</item>
+        <item>Chanclas</item>
+        <item>Chaqueta</item>
+        <item>Falda</item>
+        <item>Gorra</item>
+        <item>Jersey</item>
+        <item>Leggins</item>
+        <item>Mochila</item>
+        <item>Mono</item>
+        <item>Pantalón corto</item>
+        <item>Pantalón largo</item>
+        <item>Polo</item>
+        <item>Sandalias</item>
+        <item>Sombrero</item>
+        <item>Sudadera</item>
+        <item>Sujetador</item>
+        <item>Térmica</item>
+        <item>Top</item>
+        <item>Vestido</item>
+        <item>Zapatos</item>
+        <item>Zapatillas</item>
+    </string-array>
 </resources>

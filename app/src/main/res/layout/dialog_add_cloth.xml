@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            android:entries="@array/category_array" />
+            android:entries="@array/category_array_v2" />
 
         <!-- Selector de Color con RecyclerView -->
         <TextView
@@ -61,6 +61,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:entries="@array/occasion_array" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Temporada" />
+
+        <Spinner
+            android:id="@+id/spinnerTemporada"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/temporada_array" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nivel de Formalidad" />
+
+        <Spinner
+            android:id="@+id/spinnerNivelFormalidad"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/nivelFormalidad_array" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ajuste" />
+
+        <Spinner
+            android:id="@+id/spinnerAjuste"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/ajuste_array" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Patrón" />
+
+        <Spinner
+            android:id="@+id/spinnerPatron"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/patron_array" />
 
     </LinearLayout>
 </ScrollView>
