@@ -30,5 +30,4 @@ ATRIBUTOS que podríamos MODIFICAR:
 
 ATRIBUTOS A AÑADIR:
 - colorSec: ninguno, (los colores del ppal)
-
  */

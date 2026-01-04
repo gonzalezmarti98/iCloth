@@ -46,6 +46,13 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.16.0")
     kapt("com.github.bumptech.glide:compiler:4.16.0")
 
+    // --- GEMINI ___
+    implementation("com.google.ai.client.generativeai:generativeai:0.9.0")
+
+    // --- CORRUTINAS ---
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
+
+
     // --- ANDROIDX ---
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

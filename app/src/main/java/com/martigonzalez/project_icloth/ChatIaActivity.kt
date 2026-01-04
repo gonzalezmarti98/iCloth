@@ -1,5 +1,7 @@
 package com.martigonzalez.project_icloth
 
+import com.martigonzalez.project_icloth.closet.FirestoreManager
+import com.martigonzalez.project_icloth.model.Prenda
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
@@ -13,6 +15,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.martigonzalez.project_icloth.adapter.ChatAdapter
 import com.martigonzalez.project_icloth.model.ChatMessage
 import com.martigonzalez.project_icloth.model.ChatType
+import kotlin.text.lowercase
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+import com.martigonzalez.project_icloth.data.GeminiManager
+
 
 class ChatIaActivity : AppCompatActivity() {
 
@@ -22,6 +29,12 @@ class ChatIaActivity : AppCompatActivity() {
     private lateinit var btnSend: ImageButton
     private lateinit var chatAdapter: ChatAdapter
     private val messageList = mutableListOf<ChatMessage>()
+
+    private val firestoreManager = FirestoreManager() // Para conectar con la BDD
+    private val geminiManager = GeminiManager() // Para conectar con Gemini
+
+    private var allUserClothes: List<Prenda> = emptyList() // Aquí guardaremos la ropa cargada
+    private var currentPrompt: String = "" // Memoria del prompt
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +47,8 @@ class ChatIaActivity : AppCompatActivity() {
 
         setupRecyclerView()
 
+        loadClothes()
+
         // Acción al pulsar el botón ENVIAR
         btnSend.setOnClickListener {
             val text = etPrompt.text.toString().trim()
@@ -42,9 +57,7 @@ class ChatIaActivity : AppCompatActivity() {
             }
         }
 
-        // --- 2. CONFIGURACIÓN DE LA NAVEGACIÓN (Lo que ya tenías) ---
-        // Nota: Asegúrate de que R.id.bottom_navigation es el ID dentro de tu include_bottom_nav.xml
-        // Si te da error, prueba con R.id.include_bottom_nav
+        // --- 2. CONFIGURACIÓN DE LA NAVEGACIÓN  ---
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation_view) ?: findViewById(R.id.include_bottom_nav)
 
         bottomNav.selectedItemId = R.id.nav_chat_ia
@@ -81,6 +94,13 @@ class ChatIaActivity : AppCompatActivity() {
     }
 
     // --- MÉTODOS PRIVADOS DEL CHAT ---
+    private fun loadClothes() {
+        firestoreManager.getAllClothes { prendas ->
+            allUserClothes = prendas
+            // Opcional: Log para comprobar
+            // android.util.Log.d("ChatIA", "Ropa cargada: ${allUserClothes.size} prendas")
+        }
+    }
 
     private fun setupRecyclerView() {
         // Inicializamos el adapter pasándole la lista y la función lambda para cuando se confirmen etiquetas
@@ -93,17 +113,18 @@ class ChatIaActivity : AppCompatActivity() {
 
     // Paso 1: El usuario envía un mensaje
     private fun sendMessage(text: String) {
+        currentPrompt = text // <------------- guardamos la pregunta aquí
+
         // Añadir mensaje del usuario a la lista visual
         val userMsg = ChatMessage(text, ChatType.USER)
         messageList.add(userMsg)
 
-        // Avisar al adapter que hay un item nuevo
         chatAdapter.notifyItemInserted(messageList.size - 1)
-        rvChat.scrollToPosition(messageList.size - 1) // Bajar scroll al final
+        rvChat.scrollToPosition(messageList.size - 1)
 
-        etPrompt.text.clear() // Limpiar campo de texto
+        etPrompt.text.clear()
 
-        // Paso 2: Simular "pensando..." de la IA (Retraso de 1 segundo)
+        // Simular pensamiento
         Handler(Looper.getMainLooper()).postDelayed({
             showAiTagResponse()
         }, 1000)
@@ -113,7 +134,10 @@ class ChatIaActivity : AppCompatActivity() {
     private fun showAiTagResponse() {
         // Estas son las etiquetas que saldrán en los chips.
         // En el futuro, esto podría venir de la respuesta real de Gemini.
-        val tags = listOf("Formal", "De Noche", "Invierno", "Cena", "Informal", "Verano", "Elegante")
+        val tags = listOf("Casual", "Trabajo/Oficina", "Deporte", "Fiesta/Noche", "Playa/Verano",
+            "Entretiempo", "Invierno/Frío", "Verano/Calor",
+            "Muy Formal", "Medio Formal", "Nada Formal",
+            "Regular", "Ceñido", "Oversize")
 
         val aiMsg = ChatMessage(
             text = "dummy", // El texto va dentro del layout de tags, aquí no se usa
@@ -127,20 +151,106 @@ class ChatIaActivity : AppCompatActivity() {
 
     // Paso 4: El usuario ha seleccionado etiquetas y pulsado "Confirmar"
     private fun handleTagsSelection(tags: List<String>) {
+        // 1. Mensaje de feedback visual ("Buscando...")
         var finalText = "¡Oído cocina! Buscando prendas para: ${tags.joinToString(", ")}. . .\nGenerando outfits. . ."
         if (tags.isEmpty()) {
-            finalText = "¡Oído cocina! Generando outfits. . ."
+            finalText = "¡Oído cocina! Generando outfits con todo el armario. . ."
         }
 
-        // Mensaje de feedback de la IA
-
         val aiLoadingMsg = ChatMessage(finalText, ChatType.AI_TEXT)
-
         messageList.add(aiLoadingMsg)
         chatAdapter.notifyItemInserted(messageList.size - 1)
         rvChat.scrollToPosition(messageList.size - 1)
 
-        // TODO: AQUÍ ES DONDE LUEGO CAMBIAREMOS DE ACTIVITY O MOSTRAREMOS RESULTADOS
-        // Por ahora, solo es visual.
+
+        // 2. LÓGICA DE FILTRADO
+        // ---------------------------------------------------
+        val filteredClothes = if (tags.isEmpty()) {
+            allUserClothes // Si no hay etiquetas, usamos todo
+        } else {
+            allUserClothes.filter { prenda ->
+                // La prenda se queda si cumple AL MENOS UNA de las etiquetas seleccionadas
+                tags.any { tagSeleccionado ->
+                    cumpleCriterio(prenda, tagSeleccionado)
+                }
+            }
+        }
+        // ---------------------------------------------------
+
+        // Comprobación de seguridad por si el filtro deja 0 prendas
+        val finalClothesList = if (filteredClothes.isEmpty()) {
+            // Opcional: Podrías añadir un mensaje tipo "No encontré nada exacto..."
+            allUserClothes
+        } else {
+            filteredClothes
+        }
+
+        // 3. LLAMADA A GEMINI
+        // Usamos una corrutina para no bloquear la pantalla mientras la IA piensa
+        lifecycleScope.launch {
+            try {
+                // Llamamos a tu Manager pasándole el prompt original y la lista ya filtrada
+                val respuestaGemini = geminiManager.getOutfitProposal(
+                    userPrompt = currentPrompt,
+                    filteredClothes = finalClothesList
+                )
+
+                // 4. MOSTRAR RESULTADOS EN EL CHAT (IMPLEMENTADO)
+                // Creamos el mensaje con la respuesta de la IA
+                val aiResponseMsg = ChatMessage(respuestaGemini, ChatType.AI_TEXT)
+
+                // Lo añadimos a la lista y actualizamos
+                messageList.add(aiResponseMsg)
+                chatAdapter.notifyItemInserted(messageList.size - 1)
+                rvChat.scrollToPosition(messageList.size - 1)
+
+            } catch (e: Exception) {
+                // Si algo falla (internet, api key...), avisamos al usuario
+                val errorMsg = ChatMessage("Ups, tuve un problema conectando con el servidor de IA: ${e.message}", ChatType.AI_TEXT)
+                messageList.add(errorMsg)
+                chatAdapter.notifyItemInserted(messageList.size - 1)
+                rvChat.scrollToPosition(messageList.size - 1)
+            }
+        }
     }
+
+
+    /**
+     * TRADUCTOR: Convierte las etiquetas "bonitas" del chat a reglas de la BDD
+     */
+    private fun cumpleCriterio(prenda: com.martigonzalez.project_icloth.model.Prenda, etiqueta: String): Boolean {
+        // Convertimos a minúsculas para evitar errores
+        val formalidad = prenda.nivelFormalidad.lowercase()
+        val temporada = prenda.temporada.lowercase()
+        val ocasion = prenda.ocasion.lowercase()
+        val ajuste = prenda.ajuste.lowercase()
+
+        return when (etiqueta) {
+            // --- FORMALIDAD ---
+            "Muy Formal" -> formalidad == "alto"
+            "Medio Formal" -> formalidad == "medio"
+            "Nada Formal" -> formalidad == "bajo"
+
+            // --- TEMPORADA ---
+            "Invierno/Frío" -> temporada.contains("invierno") || temporada.contains("otoño")
+            "Verano/Calor" -> temporada.contains("verano")
+            "Entretiempo" -> temporada.contains("primavera") || temporada.contains("otoño")
+            "Playa/Verano" -> temporada.contains("verano") || ocasion.contains("playa")
+
+            // --- OCASIONES / ESTILOS ---
+            "Trabajo/Oficina" -> ocasion.contains("trabajo") || ocasion.contains("oficina") || formalidad == "medio" || formalidad == "alto"
+            "Fiesta/Noche" -> ocasion.contains("fiesta") || ocasion.contains("noche") || ocasion.contains("cena")
+            "Deporte" -> prenda.categoria.lowercase() == "deporte" || ocasion.contains("deporte")
+            "Casual" -> formalidad == "bajo" || formalidad == "medio" || ocasion.contains("casual")
+
+            // --- POR DEFECTO ---
+            // Si la etiqueta no es especial, buscamos la palabra tal cual en cualquier campo
+            else -> {
+                prenda.categoria.contains(etiqueta, ignoreCase = true) ||
+                        prenda.ocasion.contains(etiqueta, ignoreCase = true) ||
+                        prenda.colorPpal.contains(etiqueta, ignoreCase = true)
+            }
+        }
+    }
+
 }
