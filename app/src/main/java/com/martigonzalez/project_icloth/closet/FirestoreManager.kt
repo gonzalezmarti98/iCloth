@@ -54,7 +54,6 @@ class FirestoreManager {
      * Recupera todas las prendas de la subcolección 'clothes' del usuario actual.
      */
     fun getAllClothes(onResult: (List<Prenda>) -> Unit) {
-        // Obtenemos el usuario actual aquí también, por consistencia.
         val userId = FirebaseAuth.getInstance().currentUser?.uid
 
         if (userId == null) {
@@ -64,14 +63,27 @@ class FirestoreManager {
 
         db.collection("users").document(userId).collection("clothes")
             .get()
-            .addOnSuccessListener { documents ->
-                // Convierte cada documento en un objeto Prenda
-                val prendas = documents.toObjects(Prenda::class.java)
-                onResult(prendas)
+            .addOnSuccessListener { result ->
+                // Creamos una lista manual
+                val listaPrendas = mutableListOf<Prenda>()
+
+                // Recorremos cada documento uno a uno
+                for (document in result) {
+                    // 1. Convertimos los datos de dentro
+                    val prenda = document.toObject(Prenda::class.java)
+
+                    // 2. ¡AQUÍ ESTÁ LA MAGIA! Le pegamos el ID del documento
+                    prenda.id = document.id
+
+                    listaPrendas.add(prenda)
+                }
+
+                // Devolvemos la lista ya con los IDs rellenos
+                onResult(listaPrendas)
             }
             .addOnFailureListener {
-                // Si falla, devuelve una lista vacía
                 onResult(emptyList())
             }
     }
+
 }

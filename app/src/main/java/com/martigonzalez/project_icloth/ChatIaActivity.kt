@@ -166,7 +166,7 @@ class ChatIaActivity : AppCompatActivity() {
         // 2. LÓGICA DE FILTRADO
         // ---------------------------------------------------
         val filteredClothes = if (tags.isEmpty()) {
-            allUserClothes // Si no hay etiquetas, usamos todo
+            allUserClothes // Si no hay etiquetas, usamos toodo
         } else {
             allUserClothes.filter { prenda ->
                 // La prenda se queda si cumple AL MENOS UNA de las etiquetas seleccionadas

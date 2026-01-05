@@ -6,11 +6,10 @@ import com.martigonzalez.project_icloth.model.Prenda
 
 class GeminiManager {
 
-
-    private val apiKey = "" //TODO: por ahora usar la de cada uno
+    private val apiKey = "AIzaSyAZL4VQOjIAKEp3Dd2KLVqejhl2SLyf5yA" //TODO: por ahora usar la de cada uno
 
     private val generativeModel = GenerativeModel(
-        modelName = "gemini-pro",
+        modelName = "gemini-2.5-flash",
         apiKey = apiKey
     )
 
@@ -22,6 +21,7 @@ class GeminiManager {
         // 1. Convertimos la lista de objetos Prenda a un Texto que Gemini entienda.
         // Omitimos imagenUrl para ahorrar tokens y ruido.
         val wardrobeText = filteredClothes.joinToString(separator = "\n") { prenda ->
+            android.util.Log.d("DEBUG_GEMINI", "Prenda: ${prenda.nombre} - ID: ${prenda.id}")
             """
             - ID: ${prenda.id}
               Nombre: ${prenda.nombre}
