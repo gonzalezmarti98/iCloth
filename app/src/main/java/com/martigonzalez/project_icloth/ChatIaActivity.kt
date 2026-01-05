@@ -189,29 +189,59 @@ class ChatIaActivity : AppCompatActivity() {
         // Usamos una corrutina para no bloquear la pantalla mientras la IA piensa
         lifecycleScope.launch {
             try {
-                // Llamamos a tu Manager pasándole el prompt original y la lista ya filtrada
-                val respuestaGemini = geminiManager.getOutfitProposal(
-                    userPrompt = currentPrompt,
-                    filteredClothes = finalClothesList
-                )
+                val respuestaGemini = geminiManager.getOutfitProposal(currentPrompt, finalClothesList)
 
-                // 4. MOSTRAR RESULTADOS EN EL CHAT (IMPLEMENTADO)
-                // Creamos el mensaje con la respuesta de la IA
-                val aiResponseMsg = ChatMessage(respuestaGemini, ChatType.AI_TEXT)
+                // --- LÓGICA DE PARSEO ---
 
-                // Lo añadimos a la lista y actualizamos
-                messageList.add(aiResponseMsg)
-                chatAdapter.notifyItemInserted(messageList.size - 1)
+                // 1. Cortamos el texto por el separador "|||"
+                // trim() elimina espacios al principio y final de cada trozo
+                val partes = respuestaGemini.split("|||").map { it.trim() }
+
+                // PARTE 0: El mensaje de Introducción
+                if (partes.isNotEmpty()) {
+                    val introMsg = ChatMessage(partes[0], ChatType.AI_TEXT)
+                    messageList.add(introMsg)
+                    chatAdapter.notifyItemInserted(messageList.size - 1)
+                }
+
+                // EL RESTO: Vienen en pares (IDs + Explicación)
+                // Empezamos en el índice 1
+                var i = 1
+                while (i < partes.size - 1) {
+                    val idsString = partes[i]       // Ej: "id1, id2"
+                    val explicacion = partes[i+1]   // Ej: "Este look mola..."
+
+                    // Limpiamos los IDs
+                    val idsLimpios = idsString.split(",")
+                        .map { it.trim().replace("[", "").replace("]", "").replace("\"", "") }
+
+                    // Buscamos las URLs reales en tu lista de ropa
+                    val urlsEncontradas = allUserClothes
+                        .filter { prenda -> idsLimpios.contains(prenda.id) }
+                        .map { it.imagenUrl }
+
+                    // Creamos el mensaje TIPO OUTFIT
+                    if (urlsEncontradas.isNotEmpty()) {
+                        val outfitMsg = ChatMessage(
+                            text = explicacion,
+                            type = ChatType.OUTFIT,
+                            imageUrls = urlsEncontradas
+                        )
+                        messageList.add(outfitMsg)
+                        chatAdapter.notifyItemInserted(messageList.size - 1)
+                    }
+
+                    // Saltamos 2 posiciones para el siguiente outfit
+                    i += 2
+                }
+
                 rvChat.scrollToPosition(messageList.size - 1)
 
             } catch (e: Exception) {
-                // Si algo falla (internet, api key...), avisamos al usuario
-                val errorMsg = ChatMessage("Ups, tuve un problema conectando con el servidor de IA: ${e.message}", ChatType.AI_TEXT)
-                messageList.add(errorMsg)
-                chatAdapter.notifyItemInserted(messageList.size - 1)
-                rvChat.scrollToPosition(messageList.size - 1)
+                // ... manejo de errores
             }
         }
+
     }
 
 

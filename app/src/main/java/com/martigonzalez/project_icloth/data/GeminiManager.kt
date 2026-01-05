@@ -6,7 +6,9 @@ import com.martigonzalez.project_icloth.model.Prenda
 
 class GeminiManager {
 
-    private val apiKey = "" //TODO: por ahora usar la de cada uno. BORRAR antes del commit !!!!
+    private val apiKey = "AIzaSa.... etc (PON AQUÍ LA TUYA)"
+    //TODO: por ahora usar la de cada uno. BORRAR antes del commit !!!!
+    // https://aistudio.google.com/api-keys --> para copiar tu clave
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-2.5-flash",
@@ -49,15 +51,26 @@ class GeminiManager {
             Crea 1 o 2 outfits completos usando SOLO las prendas del inventario de arriba.
             
             FORMATO DE RESPUESTA REQUERIDO:
-            Por favor, responde usando este formato exacto para que yo pueda leerlo después:
+            Por favor, responde usando este formato exacto para que yo pueda leerlo después.
+            Tu respuesta DEBE tener estrictamente este formato con separadores "|||":
             
-            OUTFIT 1:
-            - IDs: [id_prenda_1, id_prenda_2, ...]
-            - Explicación: (Breve razón de por qué queda bien)
+            El orden debe ser:
+            1. Texto de introducción amigable y breve.
+            2. IDs del primer outfit (separados por coma).
+            3. Explicación del primer outfit.
+            4. IDs del segundo outfit (si lo hay).
+            5. Explicación del segundo outfit (si lo hay).
             
-            OUTFIT 2 (si aplica):
-            - IDs: [id_prenda_1, id_prenda_2, ...]
-            - Explicación: ...
+            Ejemplo de respuesta válida:
+            Hola, he encontrado estas opciones para ti.
+            |||
+            id_camisa, id_pantalon
+            |||
+            Este look es ideal porque combina colores tierra...
+            |||
+            id_vestido, id_zapatos
+            |||
+            Esta opción es más fresca para el verano...
             
             Si no encuentras ropa suficiente para combinar, dímelo claramente.
         """.trimIndent()
@@ -67,7 +80,7 @@ class GeminiManager {
             val response = generativeModel.generateContent(prompt)
             response.text ?: "No he podido generar una respuesta."
         } catch (e: Exception) {
-            "Error al conectar con Gemini: ${e.message}"
+            "Error al conectar con la API de Gemini: ${e.message}"
         }
     }
 }

@@ -4,8 +4,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.martigonzalez.project_icloth.R
@@ -21,6 +24,7 @@ class ChatAdapter(
         private const val TYPE_USER = 0
         private const val TYPE_AI_TEXT = 1
         private const val TYPE_AI_TAGS = 2
+        private const val TYPE_AI_OUTFIT = 3
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -28,6 +32,7 @@ class ChatAdapter(
             ChatType.USER -> TYPE_USER
             ChatType.AI_TEXT -> TYPE_AI_TEXT
             ChatType.AI_TAGS -> TYPE_AI_TAGS
+            ChatType.OUTFIT -> TYPE_AI_OUTFIT
         }
     }
 
@@ -37,6 +42,10 @@ class ChatAdapter(
             TYPE_USER -> {
                 val view = inflater.inflate(R.layout.item_chat_user, parent, false)
                 UserViewHolder(view)
+            }
+            TYPE_AI_OUTFIT ->{
+                val view = LayoutInflater.from(parent.context).inflate(R.layout.item_chat_outfit, parent, false)
+                OutfitViewHolder(view)
             }
             TYPE_AI_TAGS -> {
                 val view = inflater.inflate(R.layout.item_chat_ai_tags, parent, false)
@@ -55,6 +64,34 @@ class ChatAdapter(
             is UserViewHolder -> holder.bind(message)
             is AiTextViewHolder -> holder.bind(message)
             is AiTagsViewHolder -> holder.bind(message, onTagsConfirmed)
+            is OutfitViewHolder -> {
+                holder.tvExplanation.text = message.text
+
+                // Limpiamos las fotos anteriores (por el reciclaje de vistas)
+                holder.llImagesContainer.removeAllViews()
+
+                // Añadimos las fotos
+                message.imageUrls.forEach { url ->
+                    val imageView = ImageView(holder.itemView.context)
+
+                    // Tamaño de cada foto (ej: 100x100 dp)
+                    val size = (100 * holder.itemView.context.resources.displayMetrics.density).toInt()
+                    val params = LinearLayout.LayoutParams(size, size)
+                    params.setMargins(0, 0, 16, 0) // Margen derecho
+
+                    imageView.layoutParams = params
+                    imageView.scaleType = ImageView.ScaleType.CENTER_CROP
+                    // Fondo gris por si tarda en cargar
+                    imageView.setBackgroundColor(android.graphics.Color.DKGRAY)
+
+                    // Cargamos la imagen con Glide
+                    Glide.with(holder.itemView.context)
+                        .load(url)
+                        .into(imageView)
+
+                    holder.llImagesContainer.addView(imageView)
+                }
+            }
         }
     }
 
@@ -73,6 +110,12 @@ class ChatAdapter(
             tvMessage.text = msg.text
         }
     }
+
+    class OutfitViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+        val tvExplanation: TextView = view.findViewById(R.id.tvExplanation)
+        val llImagesContainer: LinearLayout = view.findViewById(R.id.llImagesContainer)
+    }
+
 
     // Clase interna para el ViewHolder de AiTags
     class AiTagsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
