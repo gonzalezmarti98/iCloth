@@ -6,7 +6,7 @@ import com.martigonzalez.project_icloth.model.Prenda
 
 class GeminiManager {
 
-    private val apiKey = "AIzaSyAZL4VQOjIAKEp3Dd2KLVqejhl2SLyf5yA" //TODO: por ahora usar la de cada uno
+    private val apiKey = "" //TODO: por ahora usar la de cada uno. BORRAR antes del commit !!!!
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-2.5-flash",
