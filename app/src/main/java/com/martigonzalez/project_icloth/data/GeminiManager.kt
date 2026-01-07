@@ -6,7 +6,7 @@ import com.martigonzalez.project_icloth.model.Prenda
 
 class GeminiManager {
 
-    private val apiKey = "AIzaSa.... etc (PON AQUÍ LA TUYA)"
+    private val apiKey = ""
     //TODO: por ahora usar la de cada uno. BORRAR antes del commit !!!!
     // https://aistudio.google.com/api-keys --> para copiar tu clave
 
@@ -72,7 +72,10 @@ class GeminiManager {
             |||
             Esta opción es más fresca para el verano...
             
-            Si no encuentras ropa suficiente para combinar, dímelo claramente.
+            Si no encuentras ropa suficiente para combinar, o consideras que no puedes crear un outfit que 
+            encaje para la situación que se pide, mejor escribe mensajes parecidos a éste:
+            Lo siento, no he podido crear un outfit para tu caso. No tienes prendas adecuadas en tu armario.
+            
         """.trimIndent()
 
         // 3. Enviamos a la IA

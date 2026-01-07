@@ -336,6 +336,37 @@ class ClosetActivity : AppCompatActivity() {
                 Log.e("DialogoDetalle", "URL de imagen inválida o vacía: ${prenda.imagenUrl}")
             }
         }
+
+        //Botón borrar prenda
+        val btnDelete = dialog.findViewById<android.widget.Button>(R.id.btnDeleteCloth)
+
+        btnDelete?.setOnClickListener {
+            // Confirmación de seguridad
+            AlertDialog.Builder(this)
+                .setTitle("¿Borrar prenda?")
+                .setMessage("Esta acción no se puede deshacer.")
+                .setPositiveButton("Borrar") { _, _ ->
+
+                    // Llamada a Firestore
+                    firestoreManager.deleteCloth(
+                        prenda.id,
+                        onSuccess = {
+                            Toast.makeText(this, "Prenda eliminada", Toast.LENGTH_SHORT).show()
+
+                            // 3. Usamos 'dialog.dismiss()' (no alertDialog)
+                            dialog.dismiss()
+
+                            // Recargar la lista
+                            loadClothesFromFirestore()
+                        },
+                        onFailure = {
+                            Toast.makeText(this, "Error al borrar", Toast.LENGTH_SHORT).show()
+                        }
+                    )
+                }
+                .setNegativeButton("Cancelar", null)
+                .show()
+        }
         dialog.show()
     }
 

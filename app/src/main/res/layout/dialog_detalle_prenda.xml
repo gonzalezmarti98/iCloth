@@ -127,6 +127,21 @@
                     android:textSize="16dp"
                     android:text="URL" />
 
+                <Button
+                    android:id="@+id/btnDeleteCloth"
+                    android:layout_width="170dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="24dp"
+                    android:layout_marginBottom="16dp"
+                    android:backgroundTint="#FF5252"
+                    android:fontFamily="@font/inter_bold"
+                    android:text="Borrar Prenda"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    app:icon="@android:drawable/ic_menu_delete"
+                    app:iconTint="@color/white" />
+
             </LinearLayout>
         </ScrollView>
     </LinearLayout>

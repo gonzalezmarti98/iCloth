@@ -86,4 +86,19 @@ class FirestoreManager {
             }
     }
 
+    // Borrar prendas
+    fun deleteCloth(prendaId: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        val userId = FirebaseAuth.getInstance().currentUser?.uid ?: return
+
+        db.collection("users").document(userId).collection("clothes")
+            .document(prendaId)
+            .delete()
+            .addOnSuccessListener {
+                onSuccess()
+            }
+            .addOnFailureListener { e ->
+                onFailure(e)
+            }
+    }
+
 }
