@@ -33,6 +33,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <!-- AQUÍ AÑADIMOS LA BARRA DE NAVEGACIÓN -->
+
+    <Button
+        android:id="@+id/btnLogout"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:backgroundTint="#142F42"
+        android:fontFamily="@font/inter_bold"
+        android:text="Cerrar sesión"
+        android:textColor="@color/white"
+        android:textSize="14sp"
+        app:iconTint="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/include_bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_editor_absoluteX="135dp" />
+
     <include
         android:id="@+id/include_bottom_nav"
         layout="@layout/include_bottom_nav"
