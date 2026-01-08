@@ -6,13 +6,12 @@ import com.martigonzalez.project_icloth.model.Prenda
 
 class GeminiManager {
 
-    private val apiKey = ""
     //TODO: por ahora usar la de cada uno. BORRAR antes del commit !!!!
     // https://aistudio.google.com/api-keys --> para copiar tu clave
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-2.5-flash",
-        apiKey = apiKey
+        apiKey = GeminiApiKey
     )
 
     suspend fun getOutfitProposal(

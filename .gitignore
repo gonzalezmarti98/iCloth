@@ -16,3 +16,4 @@ build/
 .cxx
 local.properties
 /app/google-services.json
+data/GeminiApiKey.kt

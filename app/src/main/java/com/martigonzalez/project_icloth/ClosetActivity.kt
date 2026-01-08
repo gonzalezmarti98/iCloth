@@ -277,7 +277,6 @@ class ClosetActivity : AppCompatActivity() {
             .setNegativeButton("Cancelar", null)
             .create()
             .show()
-        // --- FIN DE LA CORRECCIÓN ---
     }
 
     /**
