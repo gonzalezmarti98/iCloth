@@ -6,8 +6,7 @@ import com.martigonzalez.project_icloth.model.Prenda
 
 class GeminiManager {
 
-    //TODO: por ahora usar la de cada uno. BORRAR antes del commit !!!!
-    // https://aistudio.google.com/api-keys --> para copiar tu clave
+    //TODO: clave dentro de GeminiApiKey
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-2.5-flash",
