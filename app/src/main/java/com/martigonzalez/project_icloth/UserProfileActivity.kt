@@ -2,8 +2,11 @@ package com.martigonzalez.project_icloth
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.auth.FirebaseAuth
 
 class UserProfileActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,6 +14,8 @@ class UserProfileActivity: AppCompatActivity() {
         setContentView(R.layout.activity_user_profile)
 
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottom_navigation_view)
+        val btnLogout = findViewById<Button>(R.id.btnLogout)
+
         // Marcamos visualmente el botón correcto
         bottomNav.selectedItemId = R.id.nav_profile
 
@@ -45,6 +50,32 @@ class UserProfileActivity: AppCompatActivity() {
                 }
                 else -> false
             }
+        }
+        // BOTÓN CERRAR SESIÓN CON DIÁLOGO DE CONFIRMACIÓN
+        btnLogout.setOnClickListener {
+            // 1. Crear el constructor del diálogo
+            MaterialAlertDialogBuilder(this)
+                // 2. Configurar el diálogo
+                .setTitle("Cerrar Sesión")
+                .setMessage("¿Estás seguro de que quieres cerrar la sesión?")
+
+                // 3. Añadir el botón de acción positiva ("Sí")
+                .setPositiveButton("Sí") { dialog, which ->
+                    // Código que se ejecuta si el usuario pulsa "Sí"
+                    FirebaseAuth.getInstance().signOut()
+                    val intent = Intent(this, MainActivity::class.java).apply {
+                        flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    }
+                    startActivity(intent)
+                    finish()
+                }
+                // 4. Añadir el botón de acción negativa ("No")
+                .setNegativeButton("No") { dialog, which ->
+                    // Simplemente cierra el diálogo, no hace falta hacer nada más
+                    dialog.dismiss()
+                }
+                // 5. Mostrar el diálogo
+                .show()
         }
     }
 }

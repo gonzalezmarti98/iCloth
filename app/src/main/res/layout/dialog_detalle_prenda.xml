@@ -118,15 +118,6 @@
                     android:textSize="16dp"
                     android:text="Patrón" />
 
-                <TextView
-                    android:id="@+id/tvUrl"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/inter_semibold"
-                    android:textColor="@color/white"
-                    android:textSize="16dp"
-                    android:text="URL" />
-
                 <Button
                     android:id="@+id/btnDeleteCloth"
                     android:layout_width="170dp"

@@ -301,16 +301,6 @@ class ClosetActivity : AppCompatActivity() {
         val tvAjuste = dialog.findViewById<TextView>(R.id.tvAjuste)
         val tvPatron = dialog.findViewById<TextView>(R.id.tvPatron)
 
-        /**
-        DEBUG
-         **/
-        val tvUrlDebug = dialog.findViewById<TextView>(R.id.tvUrl)
-        // Mostramos la URL que estamos a punto de usar en el TextView de depuración
-        tvUrlDebug?.text = "Debug URL: ${prenda.imagenUrl}"
-        /**
-        DEBUG
-         **/
-
         tvNombre?.text = prenda.nombre
         tvCategoria?.text = "Categoría: ${prenda.categoria}"
         tvColor?.text = "Color: ${prenda.colorPpal}"
