@@ -78,5 +78,14 @@ La IA de la aplicación necesita una clave de API para poder generar las respues
 
 ## 📸 Screenshots
 
+### Armario
+![Armario](screenshots/armario.png)
 
-    
+### Detalle prenda
+![Detalle prenda](screenshots/detalle_prenda.png)
+
+### Chat iA
+![Chat](screenshots/chat_IA.png)
+
+### Propuestas generadas
+![Propuestas](screenshots/respuesta_IA.png)
