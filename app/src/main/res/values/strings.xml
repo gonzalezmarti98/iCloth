@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Project_iCloth</string>
+    <string name="app_name">iCloth</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
     <string name="text_sign_up">Sign up</string>
